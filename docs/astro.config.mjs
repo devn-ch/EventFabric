@@ -1,6 +1,7 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import { defineConfig } from 'astro/config';
+import mermaid from 'astro-mermaid';
 import remarkGfm from 'remark-gfm';
 import { starlightBasePath } from "starlight-base-path";
 
@@ -8,6 +9,10 @@ import { starlightBasePath } from "starlight-base-path";
 export default defineConfig({
 	base: "/EventFabric",
 	integrations: [
+		mermaid({
+		theme: 'forest',
+		autoTheme: true
+		}),
 		starlight({
 			title: 'EventFabric CQRS Framework',
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/devn-ch/EventFabric' }],
