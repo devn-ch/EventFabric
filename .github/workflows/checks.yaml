@@ -59,7 +59,7 @@ jobs:
 
       - name: Build docs
         working-directory: ./docs
-        run: pnpm i && pnpm build
+        run: pnpm i --ignore-scripts && pnpm approve-builds && pnpm build
 
       # - name: Verify LLM artifacts
       #   run: |
