@@ -1,23 +1,12 @@
-# Contributing to Nimbus
+# Contributing to EventFabric
 
-We appreciate your interest in contributing to Nimbus! This document provides
+We appreciate your interest in contributing to EventFabric! This document provides
 guidelines and information about contributing to this project.
-
-## Contributor License Agreement (CLA)
-
-Before we can accept your contributions, you must sign our
-[Contributor License Agreement (CLA)](CLA.md). The CLA grants
-Overlap GmbH & Co KG the necessary rights to distribute your contributions as
-part of Nimbus.
-
-When you submit your first pull request, the CLA Assistant bot will
-automatically ask you to sign the CLA by posting a comment. Simply follow the
-instructions in that comment to complete the process.
 
 ## Reporting Issues
 
 If you find a bug or have a feature request, please
-[open an issue](https://github.com/overlap-dev/Nimbus/issues) on GitHub.
+[open an issue](https://github.com/devn-ch/EventFabric/issues) on GitHub.
 
 ## Reporting Security Issues
 
@@ -28,7 +17,7 @@ issue. Instead, please follow the process described in our
 ## Issue Before Pull Request
 
 Before you start working on a new feature or a significant change, please
-[open an issue](https://github.com/overlap-dev/Nimbus/issues) first to discuss
+[open an issue](https://github.com/devn-ch/EventFabric/issues) first to discuss
 your idea. This helps ensure that your approach aligns with the project's
 direction and avoids spending time on changes that may not be accepted. Bug fixes
 for clearly broken behavior can usually skip this step.
@@ -92,7 +81,7 @@ You can check the `llms.txt` and `llms-full.txt` under `http://localhost:4173/ll
 
 Two of the examples are intentionally **not** part of the Deno workspace:
 
--   `examples/node-demo` - the `hono-demo` ported to the supported Node.js LTS, consuming the published `@nimbus-cqrs/*` npm packages. Use it to test Nimbus on Node.js.
+-   `examples/node-demo` - the `hono-demo` ported to the supported Node.js LTS, consuming the published `@nimbus-cqrs/*` npm packages. Use it to test EventFabric on Node.js.
 -   `examples/bun-demo` - the same demo running on the latest stable Bun release.
 
 Each one has its own `package.json` and `node_modules`. They are excluded from
@@ -149,15 +138,13 @@ docker run -it \
 
 1. Commit your changes with clear, descriptive commit messages
 2. Push your branch to your fork
-3. Open a pull request against the `main` branch
+3. Open a pull request against the `next` branch
 4. Ensure all CI checks pass
-5. Sign the CLA when prompted (first-time contributors only)
 
 ## License
 
-By contributing to Nimbus, you agree that your contributions will be licensed
-under the [Apache License 2.0](LICENSE), and you grant Overlap GmbH & Co KG
-additional rights as described in the [CLA](CLA.md).
+By contributing to EventFabric, you agree that your contributions will be licensed
+under the [Apache License 2.0](LICENSE).
 
 ## Release a new Version
 
