@@ -5,6 +5,7 @@ description: >-
   Install @nimbus-cqrs packages from npm or JSR for Deno, Node, or Bun; core is
   required, other packages are optional by need.
 ---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 To get started with EventFabric you need to install the core package and other relevant EventFabric packages based on your needs.
 
@@ -25,20 +26,20 @@ Theses are the dependencies EventFabric relies on.
 
 Depending on your runtime you can install EventFabric with the following commands.
 
-### Deno
-
-```bash
-deno add npm:@nimbus-cqrs/core
-```
-
-### NPM
-
-```bash
-npm install @nimbus-cqrs/core
-```
-
-### Bun
-
-```bash
-bun add @nimbus-cqrs/core
-```
+<Tabs>
+  <TabItem value="deno" label="Deno">
+    ```bash
+    deno add npm:@nimbus-cqrs/core
+    ```
+  </TabItem>
+  <TabItem value="pnpm" label="Pnpm">
+    ```bash
+    pnpm add @nimbus-cqrs/core
+    ```
+  </TabItem>
+  <TabItem value="bun" label="Bun">
+    ```bash
+    bun add @nimbus-cqrs/core
+    ```
+  </TabItem>
+</Tabs>
