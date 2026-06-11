@@ -4,8 +4,7 @@ description: >-
   Walkthrough of eventsourcing-demo — CQRS, Event Sourcing, pure core vs shell,
   projections, and queries with links to source files.
 ---
-
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid, FileTree } from '@astrojs/starlight/components';
 
 export const EXAMPLES_URL = "https://github.com/devn-ch/EventFabric/tree/next/examples";
 
@@ -61,7 +60,7 @@ This sounds modest, but it has a big consequence: the event log becomes the sing
 
 If events are the source of truth, then "current state" is just what you get when you walk through the events in order and apply them one by one. Reduce them, fold them, accumulate them - whichever word you like.
 
-For example, if a user has these two events in the log:
+For example, if an user has these two events in the log:
 
 ```
 1. UserInvited            { id: "abc", email: "jane@x.com", invitedAt: "..." }
@@ -134,31 +133,34 @@ That is the entire scope. Two write operations, three read operations, and a sma
 
 ## A Tour of the Folder
 
-```
-src/
-├── main.ts              # Application entrypoint
-├── http.ts              # Hono app + middleware + sub-routers
-├── eventsourcingdb.ts   # ESDB client + event observers
-├── mongodb.ts           # MongoDB connection manager
-├── write/               # CQRS write side
-│   ├── commandRouter.ts
-│   ├── http.ts
-│   └── iam/users/
-│       ├── core/        # Pure business logic, no I/O
-│       │   ├── commands/
-│       │   ├── domain/
-│       │   └── events/
-│       └── shell/       # I/O: HTTP + command handlers
-│           ├── commands/
-│           └── http.ts
-└── read/                # CQRS read side (no core/shell split)
-    ├── queryRouter.ts
-    ├── http.ts
-    └── iam/users/
-        ├── projections/
-        ├── queries/
-        └── http.ts
-```
+<FileTree>
+
+- src
+  - main.ts Application entrypoint
+  - http.ts Hono app + middleware + sub-routers
+  - eventsourcingdb.ts ESDB client + event observers
+  - mongodb.ts MongoDB connection manager
+  - write/ CQRS write side
+    - commandRouter.ts
+    - http.ts
+    - iam/users/
+      - core/ Pure business logic, no I/O
+        - commands/
+        - domain/
+        - events/
+      - shell/ I/O: HTTP + command handlers
+        - commands/
+        - http.ts
+  - read/ CQRS read side (no core/shell split)
+    - queryRouter.ts
+    - http.ts
+    - iam/users/
+      - projections/
+      - queries/
+      - http.ts
+        
+
+</FileTree>
 
 Notice two things.
 
@@ -380,13 +382,13 @@ export const inviteUserCommandHandler = async (command: InviteUserCommand) => {
 
 Three lines of meaningful work:
 
-1. **Build initial state.** Inviting a user starts a brand-new lifecycle, so we mint a fresh `ulid()` (a sortable, URL-safe id) and start with an empty `UserState`. There is nothing to load from the event log yet.
+1. **Build initial state.** Inviting an user starts a brand-new lifecycle, so we mint a fresh `ulid()` (a sortable, URL-safe id) and start with an empty `UserState`. There is nothing to load from the event log yet.
 2. **Call the core.** `inviteUser(state, command)` returns the events that should be appended. The handler does not know what those events look like or why they were chosen - that is the core's job.
 3. **Persist the events.** `writeEvents` appends the events to EventSourcingDB. The second argument is an array of preconditions; we will look at it in a second.
 
 ### Step 5 - The Pure Core Does the Thinking
 
-The core function lives in <a href={EXAMPLES_URL + "/eventsourcing-demo/src/write/iam/users/core/commands/inviteUser.command.ts#L53-L87"}>`src/write/iam/users/core/commands/inviteUser.command.ts`</a>. It is the entire business definition of "what does it mean to invite a user".
+The core function lives in <a href={EXAMPLES_URL + "/eventsourcing-demo/src/write/iam/users/core/commands/inviteUser.command.ts#L53-L87"}>`src/write/iam/users/core/commands/inviteUser.command.ts`</a>. It is the entire business definition of "what does it mean to invite an user".
 
 ```typescript
 // GIVEN: state = A
