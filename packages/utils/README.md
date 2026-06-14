@@ -1,12 +1,12 @@
-# Nimbus Utils
+# EventFabric Utils
+
+A small collection of utility helpers used across the EventFabric framework — currently a single helper, `getEnv`, for reading required environment variables in a fail-fast way.
 
 <img
     src="https://raw.githubusercontent.com/devn-ch/EventFabric/next/media/EventFabric.webp"
     width="1024"
     alt="Event Fabric"
 />
-
-A small collection of utility helpers used across the Nimbus framework — currently a single helper, `getEnv`, for reading required environment variables in a fail-fast way.
 
 Refer to the [EventFabric main repository](https://github.com/devn-ch/EventFabric/) or the [EventFabric documentation](https://devn-ch.github.io/EventFabric/) for more information about the EventFabric framework.
 
@@ -29,7 +29,7 @@ For detailed documentation, please refer to the [EventFabric documentation](http
 
 ## getEnv
 
-`getEnv` reads a list of environment variables from `process.env` and returns them as a plain object. If any of the requested variables are missing it logs the missing names through the Nimbus logger and throws a `GenericException`, so misconfiguration fails loudly at startup instead of leaking through as `undefined` later.
+`getEnv` reads a list of environment variables from `process.env` and returns them as a plain object. If any of the requested variables are missing it logs the missing names through the EventFabric logger and throws a `GenericException`, so misconfiguration fails loudly at startup instead of leaking through as `undefined` later.
 
 ```typescript
 import { getEnv } from "@eventfabric-cqrs/utils";
