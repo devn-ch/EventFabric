@@ -1,4 +1,4 @@
-import { GenericException } from '@nimbus-cqrs/core';
+import { GenericException } from '@eventfabric-cqrs/core';
 import type {
     Collection,
     Document,

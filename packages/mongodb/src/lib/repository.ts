@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nimbus-cqrs/core';
+import { NotFoundException } from '@eventfabric-cqrs/core';
 import { toSnakeCase } from '@std/text';
 import type {
     BulkWriteOptions,

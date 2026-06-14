@@ -6,7 +6,7 @@ import {
     setupEventBus,
     setupLogger,
     setupRouter,
-} from '@nimbus-cqrs/core';
+} from '@eventfabric-cqrs/core';
 import process from 'node:process';
 import { app } from './shared/shell/http.ts';
 import { initMessages } from './shared/shell/messages.ts';

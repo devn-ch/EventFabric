@@ -16,7 +16,7 @@ export type WithSpanOptions = {
      */
     name: string;
     /**
-     * The name of the tracer. Defaults to "nimbus".
+     * The name of the tracer. Defaults to "EventFabric".
      */
     tracerName?: string;
     /**
@@ -40,7 +40,7 @@ export type WithSpanOptions = {
  *
  * @example
  * ```ts
- * import { withSpan } from '@nimbus-cqrs/core';
+ * import { withSpan } from '@eventfabric-cqrs/core';
  *
  * const fetchUser = withSpan(
  *     {
@@ -76,7 +76,7 @@ export const withSpan = <TArgs extends unknown[], TReturn>(
     options: WithSpanOptions,
     fn: (...args: [...TArgs, Span]) => TReturn,
 ): (...args: TArgs) => TReturn => {
-    const tracerName = options.tracerName ?? 'nimbus';
+    const tracerName = options.tracerName ?? 'eventFabric';
     const tracer = trace.getTracer(tracerName);
 
     return (...args: TArgs): TReturn => {

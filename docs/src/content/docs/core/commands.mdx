@@ -55,12 +55,12 @@ type Command<TData = unknown> = {
 EventFabric provides a base Zod schema for validating commands:
 
 ```typescript
-import { commandSchema } from "@nimbus-cqrs/core";
+import { commandSchema } from "@eventfabric-cqrs/core";
 import { z } from "zod";
 
 // Extend the base schema with your specific command type and data
 const inviteUserCommandSchema = commandSchema.extend({
-    type: z.literal("at.overlap.nimbus.invite-user"),
+    type: z.literal("ch.devn.eventfabric.invite-user"),
     data: z.object({
         email: z.email(),
         firstName: z.string(),
@@ -76,12 +76,12 @@ type InviteUserCommand = z.infer<typeof inviteUserCommandSchema>;
 You can create commands using the `createCommand()` helper:
 
 ```typescript
-import { createCommand } from "@nimbus-cqrs/core";
+import { createCommand } from "@eventfabric-cqrs/core";
 import { InviteUserCommand } from "./inviteUser.command.ts";
 
 const commandForJane = createCommand<InviteUserCommand>({
-    type: "at.overlap.nimbus.invite-user",
-    source: "nimbus.overlap.at",
+    type: "ch.devn.eventfabric.invite-user",
+    source: "eventfabric.devn.ch",
     data: {
         email: "jane@example.com",
         firstName: "Jane",
@@ -90,8 +90,8 @@ const commandForJane = createCommand<InviteUserCommand>({
 });
 
 const commandForJohn = createCommand<InviteUserCommand>({
-    type: "at.overlap.nimbus.invite-user",
-    source: "nimbus.overlap.at",
+    type: "ch.devn.eventfabric.invite-user",
+    source: "eventfabric.devn.ch",
     data: {
         email: "john@example.com",
         firstName: "John",

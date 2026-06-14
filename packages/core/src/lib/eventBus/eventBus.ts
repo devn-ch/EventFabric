@@ -114,7 +114,7 @@ export type SubscribeEventInput<TEvent extends Event> = {
  *
  * @example
  * ```ts
- * import { createEvent, NimbusEventBus } from '@nimbus-cqrs/core';
+ * import { createEvent, NimbusEventBus } from '@eventfabric-cqrs/core';
  *
  * const eventBus = new NimbusEventBus({
  *     name: 'orders',
@@ -179,7 +179,7 @@ export class NimbusEventBus {
      *
      * @example
      * ```ts
-     * import { getLogger, NimbusEventBus } from '@nimbus-cqrs/core';
+     * import { getLogger, NimbusEventBus } from '@eventfabric-cqrs/core';
      *
      * const eventBus = new NimbusEventBus({
      *     name: 'orders',
@@ -219,7 +219,7 @@ export class NimbusEventBus {
      *
      * @example
      * ```ts
-     * import { createEvent, getEventBus } from '@nimbus-cqrs/core';
+     * import { createEvent, getEventBus } from '@eventfabric-cqrs/core';
      *
      * const eventBus = getEventBus('default');
      *
@@ -315,7 +315,7 @@ export class NimbusEventBus {
      *
      * @example
      * ```ts
-     * import { getEventBus, getLogger } from '@nimbus-cqrs/core';
+     * import { getEventBus, getLogger } from '@eventfabric-cqrs/core';
      *
      * const eventBus = getEventBus('default');
      *
@@ -584,7 +584,7 @@ const eventBusRegistry = new Map<string, NimbusEventBus>();
  *
  * @example
  * ```ts
- * import { getLogger, setupEventBus } from '@nimbus-cqrs/core';
+ * import { getLogger, setupEventBus } from '@eventfabric-cqrs/core';
  *
  * // At application startup, configure the event bus with all options
  * setupEventBus('default', {
@@ -622,7 +622,7 @@ export const setupEventBus = (
  *
  * @example
  * ```ts
- * import { createEvent, getEventBus } from '@nimbus-cqrs/core';
+ * import { createEvent, getEventBus } from '@eventfabric-cqrs/core';
  *
  * // Get the event bus configured earlier with setupEventBus
  * const eventBus = getEventBus('default');

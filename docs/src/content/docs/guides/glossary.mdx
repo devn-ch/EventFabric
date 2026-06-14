@@ -30,7 +30,7 @@ description: >-
 * **Lower Bound**: Observer option marking where to resume reading the **event log** after reconnect or restart, avoiding full **replay** from the beginning (see [Event Observer](/eventsourcingdb/event-observer)).
 * **Message Type**: CloudEvents `type` field (reverse-DNS, e.g. `at.overlap.nimbus.invite-user`); the **router** uses it to select a **handler** (see [Commands](/core/commands)).
 * **Module**: A DDD slice inside a **domain** for one business concept (e.g. `iam/users`) (see [In Depth Example](/guides/in-depth-example)).
-* **EventFabric Exception**: Structured error type in `@nimbus-cqrs/core` with optional HTTP status and details (see [Exceptions](/core/exceptions)).
+* **EventFabric Exception**: Structured error type in `@eventfabric-cqrs/core` with optional HTTP status and details (see [Exceptions](/core/exceptions)).
 * **OpenTelemetry**: Industry-standard observability API used by EventFabric for logging, tracing, and metrics (see [Observability](/core/observability)).
 * **Preconditions**: EventSourcingDB checks that must pass before events are appended (e.g. `isSubjectPristine`, `isSubjectOnEventId`); enforce the **aggregate** consistency boundary atomically (see [Write Events](/eventsourcingdb/write-events)).
 * **Projection**: Read-side function that turns **events** into **read model** documents or views (see [In Depth Example](/guides/in-depth-example)).

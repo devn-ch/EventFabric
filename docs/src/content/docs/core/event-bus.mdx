@@ -15,7 +15,7 @@ The EventFabricEventBus enables publish/subscribe messaging for [events](/core/e
 Configure the event bus at application startup using `setupEventBus()`, then retrieve it anywhere using `getEventBus()`.
 
 ```typescript
-import { getLogger, setupEventBus } from "@nimbus-cqrs/core";
+import { getLogger, setupEventBus } from "@eventfabric-cqrs/core";
 
 setupEventBus("MyEventBus", {
     maxRetries: 2,
@@ -50,7 +50,7 @@ setupEventBus("MyEventBus", {
 Subscribe to event types using `subscribeEvent()`:
 
 ```typescript
-import { getEventBus } from "@nimbus-cqrs/core";
+import { getEventBus } from "@eventfabric-cqrs/core";
 
 const eventBus = getEventBus("MyEventBus");
 
@@ -91,7 +91,7 @@ The `subscribeEvent()` method accepts the following options:
 Publish events using `putEvent()`:
 
 ```typescript
-import { createEvent, getEventBus } from "@nimbus-cqrs/core";
+import { createEvent, getEventBus } from "@eventfabric-cqrs/core";
 
 const eventBus = getEventBus("default");
 

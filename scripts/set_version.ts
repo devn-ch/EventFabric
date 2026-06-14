@@ -24,7 +24,7 @@ import { dirname, fromFileUrl, join, resolve } from 'jsr:@std/path@^1.0.9';
 
 const repoRoot = resolve(dirname(fromFileUrl(import.meta.url)), '..');
 
-const SCOPE = '@nimbus-cqrs';
+const SCOPE = '@eventfabric-cqrs';
 
 const denoPackages = [
     'core',
@@ -75,7 +75,7 @@ async function updateDenoJson(path: string): Promise<boolean> {
 }
 
 /**
- * Rewrites every `"@nimbus-cqrs/<pkg>": "<range>"` entry in a
+ * Rewrites every `"@eventfabric-cqrs/<pkg>": "<range>"` entry in a
  * `package.json` to use the new caret range. Other dependencies are
  * left untouched. Returns the list of bumped specifiers.
  */

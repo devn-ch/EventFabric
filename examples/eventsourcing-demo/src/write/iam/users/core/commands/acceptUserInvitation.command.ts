@@ -2,7 +2,7 @@ import {
     commandSchema,
     createEvent,
     InvalidInputException,
-} from '@nimbus-cqrs/core';
+} from '@eventfabric-cqrs/core';
 import { z } from 'zod';
 import { hasPendingInvitation, UserState } from '../domain/user.state.ts';
 import {

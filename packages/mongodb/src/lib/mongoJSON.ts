@@ -1,4 +1,4 @@
-import { InvalidInputException } from '@nimbus-cqrs/core';
+import { InvalidInputException } from '@eventfabric-cqrs/core';
 import { ObjectId } from 'mongodb';
 
 /**

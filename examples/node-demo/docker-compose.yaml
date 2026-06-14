@@ -1,0 +1,22 @@
+services:
+  ferretdb:
+    image: ghcr.io/ferretdb/ferretdb-eval:2.7.0
+    container_name: ferretdb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:   
+      POSTGRES_USER: ${PG_DB_USER:-eventfabric_user}
+      POSTGRES_PASSWORD: ${PG_DB_PASSWORD:?Please set the PG_DB_PASSWORD env variable}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ferretdb_state:/state
+    networks:
+      - eventfabric-net
+
+volumes:
+  ferretdb_state:
+  pg_data:
+
+networks:
+  eventfabric-net:

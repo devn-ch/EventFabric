@@ -1,4 +1,4 @@
-import { getLogger, setupRouter } from '@nimbus-cqrs/core';
+import { getLogger, setupRouter } from '@eventfabric-cqrs/core';
 import { registerUserQueries } from './iam/users/queries/registerUserQueries.ts';
 
 export const initQueryRouter = () => {

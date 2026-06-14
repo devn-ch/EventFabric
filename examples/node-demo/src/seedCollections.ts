@@ -1,4 +1,4 @@
-import { deployMongoCollection } from "@nimbus-cqrs/mongodb";
+import { deployMongoCollection } from "@eventfabric-cqrs/mongodb";
 import process from "node:process";
 import { USERS_COLLECTION } from "./iam/users/shell/mongodb/user.collection.ts";
 import { mongoManager } from "./shared/shell/mongodb.ts";

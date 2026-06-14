@@ -1,4 +1,4 @@
-import { querySchema } from '@nimbus-cqrs/core';
+import { querySchema } from '@eventfabric-cqrs/core';
 import { z } from 'zod';
 
 export const GET_USER_QUERY_TYPE = 'at.overlap.nimbus.get-user';

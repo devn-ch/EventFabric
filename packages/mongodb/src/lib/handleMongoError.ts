@@ -2,7 +2,7 @@ import {
     type Exception,
     GenericException,
     InvalidInputException,
-} from '@nimbus-cqrs/core';
+} from '@eventfabric-cqrs/core';
 
 /**
  * Handles MongoDB errors and converts them

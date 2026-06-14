@@ -54,7 +54,7 @@ type Query<TData = unknown> = {
 EventFabric provides a base Zod schema for validating queries:
 
 ```typescript
-import { querySchema } from "@nimbus-cqrs/core";
+import { querySchema } from "@eventfabric-cqrs/core";
 import { z } from "zod";
 
 // Extend the base schema with your specific query type and data
@@ -73,7 +73,7 @@ type GetUserQuery = z.infer<typeof getUserQuerySchema>;
 You can create queries using the `createQuery()` helper:
 
 ```typescript
-import { createQuery } from "@nimbus-cqrs/core";
+import { createQuery } from "@eventfabric-cqrs/core";
 import { GetUserQuery } from "./getUser.query.ts";
 
 const query = createQuery<GetUserQuery>({

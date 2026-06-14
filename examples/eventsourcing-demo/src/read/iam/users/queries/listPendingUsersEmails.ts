@@ -1,4 +1,4 @@
-import { querySchema } from '@nimbus-cqrs/core';
+import { querySchema } from '@eventfabric-cqrs/core';
 import { z } from 'zod';
 import { userRepository } from '../projections/users.repository.ts';
 

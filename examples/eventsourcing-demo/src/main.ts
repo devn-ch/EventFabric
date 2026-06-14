@@ -4,7 +4,7 @@ import {
     parseLogLevel,
     prettyLogFormatter,
     setupLogger,
-} from '@nimbus-cqrs/core';
+} from '@eventfabric-cqrs/core';
 import { getMongoConnectionManager } from '@nimbus-cqrs/mongodb';
 import { getEnv } from '@nimbus-cqrs/utils';
 import '@std/dotenv/load';

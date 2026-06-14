@@ -1,5 +1,5 @@
-import type { Event } from '@nimbus-cqrs/core';
-import { createEvent } from '@nimbus-cqrs/core';
+import type { Event } from '@eventfabric-cqrs/core';
+import { createEvent } from '@eventfabric-cqrs/core';
 import { assertEquals, assertNotEquals } from '@std/assert';
 import type { Event as EventSourcingDBEvent } from 'eventsourcingdb';
 import {

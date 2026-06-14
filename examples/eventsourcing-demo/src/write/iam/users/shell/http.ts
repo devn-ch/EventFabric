@@ -1,4 +1,4 @@
-import { createCommand, getRouter } from '@nimbus-cqrs/core';
+import { createCommand, getRouter } from '@eventfabric-cqrs/core';
 import { getCorrelationId } from '@nimbus-cqrs/hono';
 import { Hono } from 'hono';
 import {

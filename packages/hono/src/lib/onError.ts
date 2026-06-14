@@ -1,4 +1,4 @@
-import { Exception, getLogger } from '@nimbus-cqrs/core';
+import { Exception, getLogger } from '@eventfabric-cqrs/core';
 import type { Context } from 'hono';
 import type { HTTPResponseError } from 'hono/types';
 

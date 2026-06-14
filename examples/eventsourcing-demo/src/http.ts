@@ -1,4 +1,4 @@
-import { getLogger } from '@nimbus-cqrs/core';
+import { getLogger } from '@eventfabric-cqrs/core';
 import { getEventSourcingDBClient } from '@nimbus-cqrs/eventsourcingdb';
 import {
     correlationId,

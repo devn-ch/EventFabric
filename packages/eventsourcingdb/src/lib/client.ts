@@ -1,4 +1,4 @@
-import { GenericException, getLogger } from '@nimbus-cqrs/core';
+import { GenericException, getLogger } from '@eventfabric-cqrs/core';
 import { Client } from 'eventsourcingdb';
 import { type EventObserver, initEventObserver } from './eventObserver.ts';
 

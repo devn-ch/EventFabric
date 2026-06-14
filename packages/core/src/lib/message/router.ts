@@ -5,8 +5,8 @@ import { NotFoundException } from '../exception/notFoundException.ts';
 import { getLogger } from '../log/logger.ts';
 import type { Message } from './message.ts';
 
-const tracer = trace.getTracer('nimbus');
-const meter = metrics.getMeter('nimbus');
+const tracer = trace.getTracer('EventFabric');
+const meter = metrics.getMeter('EventFabric');
 
 const messagesRoutedCounter = meter.createCounter(
     'router_messages_routed_total',
@@ -79,7 +79,7 @@ type HandlerRegistration = {
  *
  * @example
  * ```ts
- * import { createCommand, MessageRouter } from '@nimbus-cqrs/core';
+ * import { createCommand, MessageRouter } from '@eventfabric-cqrs/core';
  *
  * const messageRouter = new MessageRouter({
  *     name: 'api',
@@ -93,21 +93,21 @@ type HandlerRegistration = {
  *
  * // Register command handler
  * messageRouter.register(
- *     'at.overlap.nimbus.create-order',
+ *     'ch.devn.eventfabric.create-order',
  *     createOrderHandler,
  *     createOrderCommandSchema,
  * );
  *
  * // Register query handler
  * messageRouter.register(
- *     'at.overlap.nimbus.get-order',
+ *     'ch.devn.eventfabric.get-order',
  *     getOrderHandler,
  *     getOrderQuerySchema,
  * );
  *
  * // Route a command
  * const command = createCommand({
- *     type: 'at.overlap.nimbus.create-order',
+ *     type: 'ch.devn.eventfabric.create-order',
  *     source: 'https://api.example.com',
  *     data: { customerId: '123', items: ['item-1', 'item-2'] },
  * });
@@ -134,17 +134,17 @@ export class MessageRouter {
      * Register a handler for a specific message type.
      *
      * @param messageType - The message type as defined in the CloudEvents specification
-     *                      (e.g., 'at.overlap.nimbus.create-order').
+     *                      (e.g., 'ch.devn.eventfabric.create-order').
      * @param handler - The async handler function that processes the message and returns a result.
      * @param schema - The Zod schema to validate the incoming message before passing to the handler.
      *
      * @example
      * ```ts
-     * import { commandSchema, type Command, getRouter } from '@nimbus-cqrs/core';
+     * import { commandSchema, type Command, getRouter } from '@eventfabric-cqrs/core';
      * import { z } from 'zod';
      *
      * // Define the command type and schema
-     * const CREATE_ORDER_TYPE = 'at.overlap.nimbus.create-order';
+     * const CREATE_ORDER_TYPE = 'ch.devn.eventfabric.create-order';
      *
      * const createOrderSchema = commandSchema.extend({
      *     type: z.literal(CREATE_ORDER_TYPE),
@@ -196,13 +196,13 @@ export class MessageRouter {
      *
      * @example
      * ```ts
-     * import { createCommand, getRouter } from '@nimbus-cqrs/core';
+     * import { createCommand, getRouter } from '@eventfabric-cqrs/core';
      *
      * const router = getRouter('default');
      *
      * // Create a command with all CloudEvents properties
      * const command = createCommand({
-     *     type: 'at.overlap.nimbus.create-order',
+     *     type: 'ch.devn.eventfabric.create-order',
      *     source: 'https://api.example.com',
      *     correlationid: '550e8400-e29b-41d4-a716-446655440000',
      *     data: {
@@ -226,7 +226,7 @@ export class MessageRouter {
             {
                 kind: SpanKind.INTERNAL,
                 attributes: {
-                    'messaging.system': 'nimbusRouter',
+                    'messaging.system': 'eventFabricRouter',
                     'messaging.router_name': this._name,
                     'messaging.operation': 'route',
                     'messaging.destination': messageType,
@@ -335,7 +335,7 @@ const routerRegistry = new Map<string, MessageRouter>();
  *
  * @example
  * ```ts
- * import { getLogger, setupRouter } from '@nimbus-cqrs/core';
+ * import { getLogger, setupRouter } from '@eventfabric-cqrs/core';
  *
  * // At application startup, configure the router with all options
  * setupRouter('default', {
@@ -376,21 +376,21 @@ export const setupRouter = (
  *
  * @example
  * ```ts
- * import { createCommand, getRouter } from '@nimbus-cqrs/core';
+ * import { createCommand, getRouter } from '@eventfabric-cqrs/core';
  *
  * // Get the router configured earlier with setupRouter
  * const router = getRouter('default');
  *
  * // Register handlers
  * router.register(
- *     'at.overlap.nimbus.create-order',
+ *     'ch.devn.eventfabric.create-order',
  *     createOrderHandler,
  *     createOrderSchema,
  * );
  *
  * // Route a message
  * const command = createCommand({
- *     type: 'at.overlap.nimbus.create-order',
+ *     type: 'ch.devn.eventfabric.create-order',
  *     source: 'https://api.example.com',
  *     correlationid: '550e8400-e29b-41d4-a716-446655440000',
  *     data: { customerId: '123', items: ['item-1'] },

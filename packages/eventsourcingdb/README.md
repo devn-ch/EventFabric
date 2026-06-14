@@ -1,4 +1,4 @@
-# Nimbus EventSourcingDB
+# EventFabric EventSourcingDB
 
 <img
     src="https://raw.githubusercontent.com/devn-ch/EventFabric/next/media/EventFabric.webp"
@@ -12,7 +12,7 @@ Integration between Nimbus and [EventSourcingDB](https://www.eventsourcingdb.io/
 -   typed **`writeEvents` / `readEvents`** helpers that translate between Nimbus events and EventSourcingDB events while preserving correlation IDs, data schemas and W3C trace context (`traceparent` / `tracestate`),
 -   resilient **event observers** with exponential-backoff retries, jitter, position tracking across reconnects and OpenTelemetry span linking back to the original writer.
 
-Refer to the [Nimbus main repository](https://github.com/overlap-dev/Nimbus) or the [Nimbus documentation](https://nimbus.overlap.at) for more information about the Nimbus framework.
+Refer to the [EventFabric main repository](https://github.com/devn-ch/EventFabric/) or the [EventFabric documentation](https://devn-ch.github.io/EventFabric/) for more information about the EventFabric framework.
 
 Also refer to the [EventSourcingDB documentation](https://docs.eventsourcingdb.io/) directly for more information about the EventSourcingDB features.
 
@@ -20,20 +20,20 @@ Also refer to the [EventSourcingDB documentation](https://docs.eventsourcingdb.i
 
 ```bash
 # Deno
-deno add npm:@nimbus-cqrs/eventsourcingdb
+deno add npm:@eventfabric-cqrs/eventsourcingdb
 
 # NPM
-npm install @nimbus-cqrs/eventsourcingdb
+npm install @eventfabric-cqrs/eventsourcingdb
 
 # Bun
-bun add @nimbus-cqrs/eventsourcingdb
+bun add @eventfabric-cqrs/eventsourcingdb
 ```
 
 `eventsourcingdb` is a peer dependency — install it (or use one of the runtimes that resolves it via `npm:`/`jsr:` specifiers).
 
 # Examples
 
-For detailed documentation, please refer to the [Nimbus documentation](https://nimbus.overlap.at).
+For detailed documentation, please refer to the [EventFabric documentation](https://devn-ch.github.io/EventFabric/).
 
 The snippets below use a tiny `Todo` domain to walk through the package — events live under the `/todos` subject and we react to `com.example.todo.added` events.
 
@@ -42,12 +42,12 @@ The snippets below use a tiny `Todo` domain to walk through the package — even
 A typical wiring at application startup: configure the client, register the observers you want to keep running, then write events from your command handlers.
 
 ```typescript
-import { createEvent } from "@nimbus-cqrs/core";
+import { createEvent } from "@eventfabric-cqrs/core";
 import {
     eventSourcingDBEventToNimbusEvent,
     setupEventSourcingDBClient,
     writeEvents,
-} from "@nimbus-cqrs/eventsourcingdb";
+} from "@eventfabric-cqrs/eventsourcingdb";
 
 await setupEventSourcingDBClient({
     url: new URL(process.env.ESDB_URL ?? ""),
@@ -57,8 +57,8 @@ await setupEventSourcingDBClient({
             subject: "/todos",
             recursive: true,
             eventHandler: async (event) => {
-                const nimbusEvent = eventSourcingDBEventToNimbusEvent(event);
-                console.log("reacting to", nimbusEvent.type, nimbusEvent.data);
+                const eventfabricEvent = eventSourcingDBEventToNimbusEvent(event);
+                console.log("reacting to", eventfabricEvent.type, eventfabricEvent.data);
             },
         },
     ],
@@ -82,7 +82,7 @@ await writeEvents([
 import {
     getEventSourcingDBClient,
     setupEventSourcingDBClient,
-} from "@nimbus-cqrs/eventsourcingdb";
+} from "@eventfabric-cqrs/eventsourcingdb";
 
 await setupEventSourcingDBClient({
     url: new URL(process.env.ESDB_URL ?? ""),
@@ -97,11 +97,11 @@ The `eventObservers` array is optional; passing observers here is just a conveni
 
 ## writeEvents
 
-`writeEvents` takes an array of Nimbus events and persists them to EventSourcingDB. Before writing it wraps each event payload with Nimbus metadata (`payload` + `nimbusMeta`) so the correlation ID and optional `dataschema` survive a round-trip, and it injects the active OpenTelemetry context as `traceparent` / `tracestate` so distributed traces stitch together end-to-end.
+`writeEvents` takes an array of EventFabric events and persists them to EventSourcingDB. Before writing it wraps each event payload with EventFabric metadata (`payload` + `eventfabricMeta`) so the correlation ID and optional `dataschema` survive a round-trip, and it injects the active OpenTelemetry context as `traceparent` / `tracestate` so distributed traces stitch together end-to-end.
 
 ```typescript
-import { createEvent } from "@nimbus-cqrs/core";
-import { writeEvents } from "@nimbus-cqrs/eventsourcingdb";
+import { createEvent } from "@eventfabric-cqrs/core";
+import { writeEvents } from "@eventfabric-cqrs/eventsourcingdb";
 
 await writeEvents([
     createEvent({
@@ -135,10 +135,10 @@ await writeEvents(
 import {
     eventSourcingDBEventToNimbusEvent,
     readEvents,
-} from "@nimbus-cqrs/eventsourcingdb";
+} from "@eventfabric-cqrs/eventsourcingdb";
 
 for await (const event of readEvents("/todos/todo-1", { recursive: false })) {
-    const nimbusEvent = eventSourcingDBEventToNimbusEvent(event);
+    const eventfabricEvent = eventSourcingDBEventToNimbusEvent(event);
     // ...rebuild your aggregate, replay state, etc.
 }
 ```
@@ -152,7 +152,7 @@ An `EventObserver` is a long-running consumer attached to a subject. `initEventO
 Each event handler runs inside an OpenTelemetry span. If the source event carries a `traceparent`, that span is linked back to the writer's trace, giving you end-to-end visibility from the command that produced the event to every subscriber that reacted to it.
 
 ```typescript
-import { initEventObserver } from "@nimbus-cqrs/eventsourcingdb";
+import { initEventObserver } from "@eventfabric-cqrs/eventsourcingdb";
 
 initEventObserver({
     subject: "/todos",

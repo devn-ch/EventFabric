@@ -1,5 +1,5 @@
-import { createCommand, createQuery, getRouter } from '@nimbus-cqrs/core';
-import { getCorrelationId } from '@nimbus-cqrs/hono';
+import { createCommand, createQuery, getRouter } from '@eventfabric-cqrs/core';
+import { getCorrelationId } from '@eventfabric-cqrs/hono';
 import { Hono } from 'hono';
 import {
     INVITE_USER_COMMAND_TYPE,

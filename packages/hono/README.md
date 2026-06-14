@@ -114,8 +114,8 @@ Set `enableTracing: false` if you only want the request/response log lines and d
 
 ```typescript
 import { Hono } from "hono";
-import { NotFoundException } from "@nimbus-cqrs/core";
-import { handleError } from "@nimbus-cqrs/hono";
+import { NotFoundException } from "@eventfabric-cqrs/core";
+import { handleError } from "@eventfabric-cqrs/hono";
 
 const app = new Hono();
 
@@ -142,7 +142,9 @@ This means your domain code can stay framework-agnostic — throw Nimbus excepti
 
 # License
 
-Copyright 2024-present Overlap GmbH & Co KG (https://overlap.at)
+Copyright 2026 devn.ch
+
+Copyright 2024 Overlap GmbH & Co KG (https://overlap.at)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

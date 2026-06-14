@@ -6,35 +6,35 @@
     alt="Event Fabric"
 />
 
-The core package of the Nimbus framework — a small, [CloudEvents](https://cloudevents.io/)-based CQRS toolkit for TypeScript. It provides typed **Commands**, **Queries** and **Events**, a validating **Router** and an in-process **EventBus** with retries and OpenTelemetry instrumentation.
+The core package of the EventFabric framework — a small, [CloudEvents](https://cloudevents.io/)-based CQRS toolkit for TypeScript. It provides typed **Commands**, **Queries** and **Events**, a validating **Router** and an in-process **EventBus** with retries and OpenTelemetry instrumentation.
 
-Refer to the [Nimbus main repository](https://github.com/overlap-dev/Nimbus) or the [Nimbus documentation](https://nimbus.overlap.at) for more information about the Nimbus framework.
+Refer to the [EventFabric main repository](https://github.com/devn-ch/EventFabric) or the [EventFabric documentation](https://devn-ch.github.io/EventFabric/) for more information about the EventFabric framework.
 
 ## Install
 
 ```bash
 # Deno
-deno add npm:@nimbus-cqrs/core
+deno add npm:@eventfabric-cqrs/core
 
 # NPM
-npm install @nimbus-cqrs/core
+npm install @eventfabric-cqrs/core
 
 # Bun
-bun add @nimbus-cqrs/core
+bun add @eventfabric-cqrs/core
 ```
 
 # Examples
 
 The snippets below walk through a tiny "todo" domain so you can see how the core building blocks fit together. Each example is runnable on its own.
 
-For detailed documentation, please refer to the [Nimbus documentation](https://nimbus.overlap.at).
+For detailed documentation, please refer to the [EventFabric documentation](https://devn-ch.github.io/EventFabric/).
 
 ## Command
 
 A **Command** asks the system to _do_ something (a write). You declare a [Zod](https://zod.dev/) schema that extends Nimbus' built-in `commandSchema`, write a handler, and register both on the router. Incoming messages are validated against the schema before they reach your handler.
 
 ```typescript
-import { commandSchema, createCommand, getRouter } from "@nimbus-cqrs/core";
+import { commandSchema, createCommand, getRouter } from "@eventfabric-cqrs/core";
 import { z } from "zod";
 
 const ADD_TODO = "com.example.todo.add";
@@ -74,7 +74,7 @@ console.log(result);
 A **Query** asks the system to _read_ something. Mechanically it is identical to a Command — same router, same validation, same shape — only the intent differs.
 
 ```typescript
-import { createQuery, getRouter, querySchema } from "@nimbus-cqrs/core";
+import { createQuery, getRouter, querySchema } from "@eventfabric-cqrs/core";
 import { z } from "zod";
 
 const GET_TODO = "com.example.todo.get";
@@ -107,7 +107,7 @@ const todo = await router.route(
 An **Event** announces that something _has happened_. Events are published to the in-process EventBus, which delivers them to every matching subscriber asynchronously, with exponential-backoff retries on handler errors and built-in OpenTelemetry traces and metrics.
 
 ```typescript
-import { createEvent, eventSchema, getEventBus } from "@nimbus-cqrs/core";
+import { createEvent, eventSchema, getEventBus } from "@eventfabric-cqrs/core";
 import { z } from "zod";
 
 const TODO_ADDED = "com.example.todo.added";
@@ -150,7 +150,7 @@ A typical flow is to publish an event from inside a command handler once the wri
 A typical app configures a single named router at startup with cross-cutting concerns (logging, correlation IDs, …) and then resolves it from anywhere via `getRouter()`.
 
 ```typescript
-import { getLogger, getRouter, setupRouter } from "@nimbus-cqrs/core";
+import { getLogger, getRouter, setupRouter } from "@eventfabric-cqrs/core";
 
 setupRouter("default", {
     logInput: (input) => {
@@ -179,7 +179,9 @@ You can have multiple named routers (for example one per transport) by calling `
 
 # License
 
-Copyright 2024-present Overlap GmbH & Co KG (https://overlap.at)
+Copyright 2026 devn.ch
+
+Copyright 2024 Overlap GmbH & Co KG (https://overlap.at)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

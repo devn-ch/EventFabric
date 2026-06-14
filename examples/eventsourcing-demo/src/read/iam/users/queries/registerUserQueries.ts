@@ -1,4 +1,4 @@
-import { getRouter } from '@nimbus-cqrs/core';
+import { getRouter } from '@eventfabric-cqrs/core';
 import {
     GET_USER_QUERY_TYPE,
     getUserQueryHandler,

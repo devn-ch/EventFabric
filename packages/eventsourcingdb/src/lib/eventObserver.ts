@@ -1,4 +1,4 @@
-import { getLogger } from '@nimbus-cqrs/core';
+import { getLogger } from '@eventfabric-cqrs/core';
 import type { Event as EventSourcingDBEvent } from 'eventsourcingdb';
 import { getEventSourcingDBClient } from './client.ts';
 import { type TraceContext, withSpan } from './tracing.ts';
