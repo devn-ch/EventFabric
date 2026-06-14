@@ -1,10 +1,4 @@
-# Nimbus MongoDB
-
-<img
-    src="https://raw.githubusercontent.com/devn-ch/EventFabric/next/media/EventFabric.webp"
-    width="1024"
-    alt="Event Fabric"
-/>
+# EventFabric MongoDB
 
 A small, opinionated layer on top of the official [`mongodb`](https://www.mongodb.com/docs/drivers/node/current/) Node driver. The package gives you:
 
@@ -15,26 +9,32 @@ A small, opinionated layer on top of the official [`mongodb`](https://www.mongod
 -   `MongoJSON` for round-tripping Mongo-typed values (`ObjectId`, `Date`, …) through plain JSON,
 -   `handleMongoError` for translating MongoDB driver errors into Nimbus exceptions.
 
-Refer to the [Nimbus main repository](https://github.com/overlap-dev/Nimbus) or the [Nimbus documentation](https://nimbus.overlap.at) for more information about the Nimbus framework.
+<img
+    src="https://raw.githubusercontent.com/devn-ch/EventFabric/next/media/EventFabric.webp"
+    width="1024"
+    alt="Event Fabric"
+/>
+
+Refer to the [EventFabric main repository](https://github.com/devn-ch/EventFabric/) or the [EventFabric documentation](https://devn-ch.github.io/EventFabric/) for more information about the EventFabric framework.
 
 ## Install
 
 ```bash
 # Deno
-deno add npm:@nimbus-cqrs/mongodb
+deno add npm:@eventfabric-cqrs/mongodb
 
 # NPM
-npm install @nimbus-cqrs/mongodb
+npm install @eventfabric-cqrs/mongodb
 
 # Bun
-bun add @nimbus-cqrs/mongodb
+bun add @eventfabric-cqrs/mongodb
 ```
 
 `mongodb` is a peer dependency — install it (or use one of the runtimes that resolves it via `npm:`/`jsr:` specifiers).
 
 # Examples
 
-For detailed documentation, please refer to the [Nimbus documentation](https://nimbus.overlap.at).
+For detailed documentation, please refer to the [EventFabric documentation](https://devn-ch.github.io/EventFabric/).
 
 The snippets below use a tiny `Todo` entity to walk through the package.
 
@@ -43,7 +43,7 @@ The snippets below use a tiny `Todo` entity to walk through the package.
 `MongoConnectionManager` is a thin singleton around a single long-lived `MongoClient` that makes sure your app reuses one client, connects lazily on first use and shuts down cleanly.
 
 ```typescript
-import { MongoConnectionManager } from "@nimbus-cqrs/mongodb";
+import { MongoConnectionManager } from "@eventfabric-cqrs/mongodb";
 import { ServerApiVersion } from "mongodb";
 
 export const mongoManager = MongoConnectionManager.getInstance(
@@ -75,10 +75,10 @@ process.on("SIGTERM", () => {
 
 ## CRUD helpers
 
-Every common operation has a typed wrapper: `findOne`, `find`, `insertOne`, `insertMany`, `updateOne`, `updateMany`, `replaceOne`, `deleteOne`, `deleteMany`, `findOneAndUpdate`, `findOneAndReplace`, `findOneAndDelete`, `aggregate`, `bulkWrite` and `countDocuments`. They all share the same idea: take a Zod schema for the result, run the operation against a `Collection`, validate the output, throw a Nimbus exception on failure, and produce an OpenTelemetry span for observability.
+Every common operation has a typed wrapper: `findOne`, `find`, `insertOne`, `insertMany`, `updateOne`, `updateMany`, `replaceOne`, `deleteOne`, `deleteMany`, `findOneAndUpdate`, `findOneAndReplace`, `findOneAndDelete`, `aggregate`, `bulkWrite` and `countDocuments`. They all share the same idea: take a Zod schema for the result, run the operation against a `Collection`, validate the output, throw a EventFabric exception on failure, and produce an OpenTelemetry span for observability.
 
 ```typescript
-import { findOne, insertOne } from "@nimbus-cqrs/mongodb";
+import { findOne, insertOne } from "@eventfabric-cqrs/mongodb";
 import { z } from "zod";
 
 const Todo = z.object({
@@ -114,7 +114,7 @@ If the document doesn't exist, `findOne` throws a `NotFoundException` instead of
 For most domains you don't want to call the CRUD helpers directly in every handler. `MongoDBRepository` wraps them in a typed, single-collection class with consistent error handling (entity-specific `NotFoundException` codes), centralized document↔entity mapping and a stable API.
 
 ```typescript
-import { MongoDBRepository } from "@nimbus-cqrs/mongodb";
+import { MongoDBRepository } from "@eventfabric-cqrs/mongodb";
 import type { Document } from "mongodb";
 import { ObjectId } from "mongodb";
 import { z } from "zod";
@@ -163,14 +163,14 @@ const todo = await todoRepository.findOne({
 });
 ```
 
-Misses, missed updates and missed deletes throw a `NotFoundException` with a domain-specific `errorCode` derived from the entity name (e.g. `TODO_NOT_FOUND`), which combines very nicely with [`@nimbus-cqrs/hono`](https://www.npmjs.com/package/@nimbus-cqrs/hono)'s `handleError` to produce consistent `404` responses.
+Misses, missed updates and missed deletes throw a `NotFoundException` with a domain-specific `errorCode` derived from the entity name (e.g. `TODO_NOT_FOUND`), which combines very nicely with [`@eventfabric-cqrs/hono`](https://www.npmjs.com/package/@eventfabric-cqrs/hono)'s `handleError` to produce consistent `404` responses.
 
 ## deployMongoCollection
 
 `deployMongoCollection` reads a single `MongoCollectionDefinition` (name + driver options + indexes) and reconciles it against the database: it creates the collection if missing, applies `collMod` if it exists, and — when `allowUpdateIndexes` is enabled — adds new indexes and drops the ones no longer in the definition. Use it at startup or in a one-off migration script.
 
 ```typescript
-import { deployMongoCollection } from "@nimbus-cqrs/mongodb";
+import { deployMongoCollection } from "@eventfabric-cqrs/mongodb";
 
 const todoCollection = {
     name: "todos",
@@ -205,7 +205,7 @@ await deployMongoCollection({
 `MongoJSON` is a `parse` / `stringify` pair that preserves Mongo-typed values across JSON boundaries by encoding them with short prefixes (`objectId::`, `date::`, `int::`, `double::`). Handy when filters arrive as query-string parameters or are stored in configuration that has to round-trip through plain JSON.
 
 ```typescript
-import { MongoJSON } from "@nimbus-cqrs/mongodb";
+import { MongoJSON } from "@eventfabric-cqrs/mongodb";
 
 const filter = MongoJSON.parse(`{
     "_id":       "objectId::507f1f77bcf86cd799439011",
@@ -225,7 +225,7 @@ const filter = MongoJSON.parse(`{
 `handleMongoError` translates raw driver errors into Nimbus exceptions: schema-validation failures (`121`) and duplicate-key errors (`11000`) become `InvalidInputException` with the offending key/value attached, anything else falls back to `GenericException`. The CRUD helpers call it for you — reach for it directly only when you're using the raw driver inside a handler.
 
 ```typescript
-import { handleMongoError } from "@nimbus-cqrs/mongodb";
+import { handleMongoError } from "@eventfabric-cqrs/mongodb";
 
 try {
     await collection.insertOne({ _id: "duplicate", title: "oops" });
@@ -237,7 +237,9 @@ try {
 
 # License
 
-Copyright 2024-present Overlap GmbH & Co KG (https://overlap.at)
+Copyright 2026 devn.ch
+
+Copyright 2024 Overlap GmbH & Co KG (https://overlap.at)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -1,16 +1,16 @@
 # EventFabric EventSourcingDB
 
+Integration between EventFabric and [EventSourcingDB](https://www.eventsourcingdb.io/). The package wraps the official `eventsourcingdb` client with:
+
+-   a **singleton setup** that pings the server, verifies the API token and registers long-running observers in one call,
+-   typed **`writeEvents` / `readEvents`** helpers that translate between Nimbus events and EventSourcingDB events while preserving correlation IDs, data schemas and W3C trace context (`traceparent` / `tracestate`),
+-   resilient **event observers** with exponential-backoff retries, jitter, position tracking across reconnects and OpenTelemetry span linking back to the original writer.
+
 <img
     src="https://raw.githubusercontent.com/devn-ch/EventFabric/next/media/EventFabric.webp"
     width="1024"
     alt="Event Fabric"
 />
-
-Integration between Nimbus and [EventSourcingDB](https://www.eventsourcingdb.io/). The package wraps the official `eventsourcingdb` client with:
-
--   a **singleton setup** that pings the server, verifies the API token and registers long-running observers in one call,
--   typed **`writeEvents` / `readEvents`** helpers that translate between Nimbus events and EventSourcingDB events while preserving correlation IDs, data schemas and W3C trace context (`traceparent` / `tracestate`),
--   resilient **event observers** with exponential-backoff retries, jitter, position tracking across reconnects and OpenTelemetry span linking back to the original writer.
 
 Refer to the [EventFabric main repository](https://github.com/devn-ch/EventFabric/) or the [EventFabric documentation](https://devn-ch.github.io/EventFabric/) for more information about the EventFabric framework.
 

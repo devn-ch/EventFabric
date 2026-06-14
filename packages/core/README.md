@@ -1,12 +1,12 @@
-# Nimbus Core
+# EventFabric Core
+
+The core package of the EventFabric framework — a small, [CloudEvents](https://cloudevents.io/)-based CQRS toolkit for TypeScript. It provides typed **Commands**, **Queries** and **Events**, a validating **Router** and an in-process **EventBus** with retries and OpenTelemetry instrumentation.
 
 <img
     src="https://raw.githubusercontent.com/devn-ch/EventFabric/next/media/EventFabric.webp"
     width="1024"
     alt="Event Fabric"
 />
-
-The core package of the EventFabric framework — a small, [CloudEvents](https://cloudevents.io/)-based CQRS toolkit for TypeScript. It provides typed **Commands**, **Queries** and **Events**, a validating **Router** and an in-process **EventBus** with retries and OpenTelemetry instrumentation.
 
 Refer to the [EventFabric main repository](https://github.com/devn-ch/EventFabric) or the [EventFabric documentation](https://devn-ch.github.io/EventFabric/) for more information about the EventFabric framework.
 
