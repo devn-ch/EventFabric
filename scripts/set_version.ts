@@ -1,11 +1,11 @@
 #!/usr/bin/env -S deno run -A
 
 /**
- * Sets the Nimbus release version across the repo.
+ * Sets the EventFabric release version across the repo.
  *
  * Updates:
  *   - `version` in every `packages/<pkg>/deno.json`
- *   - every `@nimbus-cqrs/*` dependency in `examples/{node,bun}-demo/package.json`
+ *   - every `@eventfabric-cqrs/*` dependency in `examples/{node,bun}-demo/package.json`
  *
  * The version is written verbatim into `deno.json`, and as a caret
  * range (`^<version>`) into the example `package.json` files.
@@ -99,7 +99,7 @@ async function updateExamplePackageJson(path: string): Promise<string[]> {
     return bumped;
 }
 
-console.log(`Setting Nimbus version to ${version}\n`);
+console.log(`Setting EventFabric version to ${version}\n`);
 
 for (const pkg of denoPackages) {
     const path = join(repoRoot, 'packages', pkg, 'deno.json');
