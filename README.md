@@ -8,7 +8,7 @@
 
 ## Installation
 
-Find all packages and installation instructions at [jsr.io](https://jsr.io/@nimbus-cqrs) or [npmjs.com](https://www.npmjs.com/org/nimbus-cqrs).
+Find all packages and installation instructions at [jsr.io](https://jsr.io/@eventfabric-cqrs) or [npmjs.com](https://www.npmjs.com/org/eventfabric-cqrs).
 
 ## Documentation
 
@@ -17,7 +17,7 @@ Find the full documentation at [https://devn-ch.github.io/EventFabric/](https://
 For coding agents and LLM tools, the site also publishes [llms.txt](https://nimbus.overlap.at/llms.txt) (guide index) and [llms-full.txt](https://nimbus.overlap.at/llms-full.txt) (full guide in one file), following the [llms.txt specification](https://llmstxt.org/).
 
 In addition code documentation is automatically generated and can be found for
-each package at [jsr.io](https://jsr.io/@nimbus-cqrs).
+each package at [jsr.io](https://jsr.io/@eventfabric-cqrs).
 
 ## Technical informations
 
@@ -43,6 +43,7 @@ deno task build:npm
 
 5. Deploy to npm registry
 
+iterate over all packages, e.g. for core
 ```sh
 cd dist/npm/core
 npm publish --access public
