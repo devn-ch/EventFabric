@@ -36,6 +36,18 @@ deno task version:set x.x.x
 deno publish
 ```
 
+4. Build packages for
+```sh
+deno task build:npm
+```
+
+5. Deploy to npm registry
+
+```sh
+cd dist/npm/core
+npm publish --access public
+```
+
 </details>
 
 ## License
