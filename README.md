@@ -19,6 +19,25 @@ For coding agents and LLM tools, the site also publishes [llms.txt](https://nimb
 In addition code documentation is automatically generated and can be found for
 each package at [jsr.io](https://jsr.io/@nimbus-cqrs).
 
+## Technical informations
+
+<details>
+<summary><h3>Deployment</h3></summary>
+
+1. ensure that you commited all changes
+
+2. Set a new version
+```sh
+deno task version:set x.x.x
+```
+
+3. Deploy deno packages to <a href="https://jsr.io/" target="_blank">JSR.io</a>
+```sh
+deno publish
+```
+
+</details>
+
 ## License
 
 Copyright 2026 devn.ch
