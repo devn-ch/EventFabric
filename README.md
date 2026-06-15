@@ -51,6 +51,13 @@ npm publish --access public
 
 </details>
 
+<details>
+<summary><h3>Bump deno packages</h3></summary>
+```sh
+deno install --frozen=false
+```
+</details>
+
 ## License
 
 Copyright 2026 devn.ch
