@@ -1,4 +1,4 @@
-import { MongoCollectionDefinition } from '@nimbus-cqrs/mongodb';
+import { MongoCollectionDefinition } from '@eventfabric-cqrs/mongodb';
 
 export const USERS_COLLECTION: MongoCollectionDefinition = {
     name: 'users',

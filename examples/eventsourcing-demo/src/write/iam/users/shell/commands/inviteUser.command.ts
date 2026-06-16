@@ -1,7 +1,7 @@
 import {
     getEventSourcingDBClient,
     writeEvents,
-} from '@nimbus-cqrs/eventsourcingdb';
+} from '@eventfabric-cqrs/eventsourcingdb';
 import { ulid } from '@std/ulid';
 import { isSubjectPristine } from 'eventsourcingdb';
 import {

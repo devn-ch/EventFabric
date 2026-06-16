@@ -1,5 +1,5 @@
-import { setupEventSourcingDBClient } from '@nimbus-cqrs/eventsourcingdb';
-import { getEnv } from '@nimbus-cqrs/utils';
+import { setupEventSourcingDBClient } from '@eventfabric-cqrs/eventsourcingdb';
+import { getEnv } from '@eventfabric-cqrs/utils';
 import {
     getContactProjectionLowerBound,
     projectContacts,

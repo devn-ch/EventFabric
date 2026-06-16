@@ -1,4 +1,4 @@
-import { MongoCollectionDefinition } from '@nimbus-cqrs/mongodb';
+import { MongoCollectionDefinition } from '@eventfabric-cqrs/mongodb';
 import { z } from 'zod';
 
 // For demo purposes we define a second projection for contacts.

@@ -1,13 +1,13 @@
 import { getLogger } from '@eventfabric-cqrs/core';
-import { getEventSourcingDBClient } from '@nimbus-cqrs/eventsourcingdb';
+import { getEventSourcingDBClient } from '@eventfabric-cqrs/eventsourcingdb';
 import {
     correlationId,
     getCorrelationId,
     handleError,
     logger,
-} from '@nimbus-cqrs/hono';
-import { getMongoConnectionManager } from '@nimbus-cqrs/mongodb';
-import { getEnv } from '@nimbus-cqrs/utils';
+} from '@eventfabric-cqrs/hono';
+import { getMongoConnectionManager } from '@eventfabric-cqrs/mongodb';
+import { getEnv } from '@eventfabric-cqrs/utils';
 import { Hono } from 'hono';
 import { compress } from 'hono/compress';
 import { cors } from 'hono/cors';
