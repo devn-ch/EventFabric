@@ -1,4 +1,4 @@
-import { eventSchema } from '@nimbus-cqrs/core';
+import { eventSchema } from '@eventfabric-cqrs/core';
 import z from 'zod';
 
 export const USER_INVITATION_ACCEPTED_EVENT_TYPE =

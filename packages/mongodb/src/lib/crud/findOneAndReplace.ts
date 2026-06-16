@@ -1,11 +1,11 @@
-import { GenericException, NotFoundException } from '@nimbus-cqrs/core';
+import { GenericException, NotFoundException } from '@eventfabric-cqrs/core';
 import type {
-    Collection,
-    Document,
-    Filter,
-    FindOneAndReplaceOptions,
-    WithId,
-    WithoutId,
+  Collection,
+  Document,
+  Filter,
+  FindOneAndReplaceOptions,
+  WithId,
+  WithoutId,
 } from 'mongodb';
 import type { ZodType } from 'zod';
 import { handleMongoError } from '../handleMongoError.ts';
@@ -15,19 +15,19 @@ import { withSpan } from '../tracing.ts';
  * Type to define the input for the findOneAndReplace function.
  */
 export type FindOneAndReplaceInput<TData> = {
-    collection: Collection<Document>;
-    filter: Filter<Document>;
-    replacement: WithoutId<Document>;
-    mapDocument: (document: Document) => TData;
-    outputType: ZodType;
-    options?: FindOneAndReplaceOptions;
+  collection: Collection<Document>;
+  filter: Filter<Document>;
+  replacement: WithoutId<Document>;
+  mapDocument: (document: Document) => TData;
+  outputType: ZodType;
+  options?: FindOneAndReplaceOptions;
 };
 
 /**
  * Type to define the findOneAndReplace function.
  */
 export type FindOneAndReplace = <TData>(
-    input: FindOneAndReplaceInput<TData>,
+  input: FindOneAndReplaceInput<TData>,
 ) => Promise<TData>;
 
 /**
@@ -45,42 +45,42 @@ export type FindOneAndReplace = <TData>(
  * @returns {Promise<TData>} The found and replaced document.
  */
 export const findOneAndReplace: FindOneAndReplace = <TData>({
-    collection,
-    filter,
-    replacement,
-    mapDocument,
-    outputType,
-    options,
+  collection,
+  filter,
+  replacement,
+  mapDocument,
+  outputType,
+  options,
 }: FindOneAndReplaceInput<TData>) => {
-    return withSpan('findOneAndReplace', collection, async () => {
-        let res: WithId<Document> | null = null;
+  return withSpan('findOneAndReplace', collection, async () => {
+    let res: WithId<Document> | null = null;
 
-        try {
-            if (options) {
-                res = await collection.findOneAndReplace(
-                    filter,
-                    replacement,
-                    options,
-                );
-            } else {
-                res = await collection.findOneAndReplace(filter, replacement);
-            }
-        } catch (error) {
-            throw handleMongoError(error);
-        }
+    try {
+      if (options) {
+        res = await collection.findOneAndReplace(
+          filter,
+          replacement,
+          options,
+        );
+      } else {
+        res = await collection.findOneAndReplace(filter, replacement);
+      }
+    } catch (error) {
+      throw handleMongoError(error);
+    }
 
-        if (!res) {
-            throw new NotFoundException('Document not found');
-        }
+    if (!res) {
+      throw new NotFoundException('Document not found');
+    }
 
-        try {
-            return outputType.parse(mapDocument(res)) as TData;
-        } catch (error) {
-            const exception = error instanceof Error
-                ? new GenericException().fromError(error)
-                : new GenericException();
+    try {
+      return outputType.parse(mapDocument(res)) as TData;
+    } catch (error) {
+      const exception = error instanceof Error
+        ? new GenericException().fromError(error)
+        : new GenericException();
 
-            throw exception;
-        }
-    });
+      throw exception;
+    }
+  });
 };

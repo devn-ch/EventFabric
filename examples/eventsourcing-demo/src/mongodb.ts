@@ -1,5 +1,5 @@
-import { setupMongoConnectionManager } from '@nimbus-cqrs/mongodb';
-import { getEnv } from '@nimbus-cqrs/utils';
+import { setupMongoConnectionManager } from '@eventfabric-cqrs/mongodb';
+import { getEnv } from '@eventfabric-cqrs/utils';
 import { ServerApiVersion } from 'mongodb';
 
 export const initMongoDB = () => {

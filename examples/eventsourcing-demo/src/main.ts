@@ -4,9 +4,9 @@ import {
     parseLogLevel,
     prettyLogFormatter,
     setupLogger,
-} from '@nimbus-cqrs/core';
-import { getMongoConnectionManager } from '@nimbus-cqrs/mongodb';
-import { getEnv } from '@nimbus-cqrs/utils';
+} from '@eventfabric-cqrs/core';
+import { getMongoConnectionManager } from '@eventfabric-cqrs/mongodb';
+import { getEnv } from '@eventfabric-cqrs/utils';
 import '@std/dotenv/load';
 import process from 'node:process';
 import { initEventSourcingDB } from './eventsourcingdb.ts';

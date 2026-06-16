@@ -20,7 +20,7 @@ import {
     parseLogLevel,
     prettyLogFormatter,
     setupLogger,
-} from "@nimbus-cqrs/core";
+} from "@eventfabric-cqrs/core";
 import process from "node:process";
 
 setupLogger({
@@ -61,7 +61,7 @@ Messages below the configured log level are silently ignored.
 Use `parseLogLevel()` to safely parse environment variables:
 
 ```typescript
-import { parseLogLevel } from "@nimbus-cqrs/core";
+import { parseLogLevel } from "@eventfabric-cqrs/core";
 
 // Returns 'info' if LOG_LEVEL is 'info', otherwise returns default 'silent'
 const level = parseLogLevel(process.env.LOG_LEVEL);
@@ -72,7 +72,7 @@ const level = parseLogLevel(process.env.LOG_LEVEL);
 Access the logger using `getLogger()`:
 
 ```typescript
-import { getLogger } from "@nimbus-cqrs/core";
+import { getLogger } from "@eventfabric-cqrs/core";
 
 const logger = getLogger();
 
@@ -130,7 +130,7 @@ EventFabric provides two built-in formatters:
 Outputs structured JSON for easy parsing by log aggregation tools:
 
 ```typescript
-import { jsonLogFormatter, setupLogger } from "@nimbus-cqrs/core";
+import { jsonLogFormatter, setupLogger } from "@eventfabric-cqrs/core";
 
 setupLogger({
     logLevel: "info",
@@ -146,7 +146,7 @@ setupLogger({
 Outputs human-readable colored logs for development:
 
 ```typescript
-import { prettyLogFormatter, setupLogger, getLogger } from "@nimbus-cqrs/core";
+import { prettyLogFormatter, setupLogger, getLogger } from "@eventfabric-cqrs/core";
 
 setupLogger({
     logLevel: "debug",

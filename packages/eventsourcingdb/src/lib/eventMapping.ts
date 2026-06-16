@@ -1,8 +1,8 @@
-import { createEvent, type Event } from '@nimbus-cqrs/core';
+import { createEvent, type Event } from '@eventfabric-cqrs/core';
 import { ulid } from '@std/ulid';
 import type {
-    Event as EventSourcingDBEvent,
-    EventCandidate,
+  Event as EventSourcingDBEvent,
+  EventCandidate,
 } from 'eventsourcingdb';
 
 /**
@@ -13,8 +13,8 @@ import type {
  * @property {string} dataschema - An absolute URL to the schema that the data adheres to (optional).
  */
 export type NimbusEventMetadata = {
-    correlationid: string;
-    dataschema?: string;
+  correlationid: string;
+  dataschema?: string;
 };
 
 /**
@@ -25,8 +25,8 @@ export type NimbusEventMetadata = {
  * @property {NimbusEventMetadata} nimbusMeta - Nimbus-specific metadata such as correlation id and data schema.
  */
 export type EventData = {
-    payload: Record<string, unknown>;
-    nimbusMeta: NimbusEventMetadata;
+  payload: Record<string, unknown>;
+  nimbusMeta: NimbusEventMetadata;
 };
 
 /**
@@ -37,12 +37,12 @@ export type EventData = {
  * @returns `true` if the value is an {@link EventData}, `false` otherwise.
  */
 export const isEventData = (data: unknown): data is EventData => {
-    return (
-        typeof data === 'object' &&
-        data !== null &&
-        'payload' in data &&
-        'nimbusMeta' in data
-    );
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'payload' in data &&
+    'nimbusMeta' in data
+  );
 };
 
 /**
@@ -53,24 +53,24 @@ export const isEventData = (data: unknown): data is EventData => {
  * @returns An EventSourcingDB event candidate ready to be written.
  */
 export const nimbusEventToEventSourcingDBEventCandidate = (
-    event: Event,
-    traceparent?: string,
-    tracestate?: string,
+  event: Event,
+  traceparent?: string,
+  tracestate?: string,
 ): EventCandidate => {
-    return {
-        source: event.source,
-        subject: event.subject,
-        type: event.type,
-        data: {
-            payload: event.data,
-            nimbusMeta: {
-                correlationid: event.correlationid,
-                ...(event.dataschema && { dataschema: event.dataschema }),
-            },
-        },
-        ...(traceparent && { traceparent: traceparent }),
-        ...(tracestate && { tracestate: tracestate }),
-    };
+  return {
+    source: event.source,
+    subject: event.subject,
+    type: event.type,
+    data: {
+      payload: event.data,
+      nimbusMeta: {
+        correlationid: event.correlationid,
+        ...(event.dataschema && { dataschema: event.dataschema }),
+      },
+    },
+    ...(traceparent && { traceparent: traceparent }),
+    ...(tracestate && { tracestate: tracestate }),
+  };
 };
 
 /**
@@ -83,29 +83,29 @@ export const nimbusEventToEventSourcingDBEventCandidate = (
  * @returns A Nimbus event.
  */
 export const eventSourcingDBEventToNimbusEvent = <TEvent extends Event>(
-    eventSourcingDBEvent: EventSourcingDBEvent,
+  eventSourcingDBEvent: EventSourcingDBEvent,
 ): TEvent => {
-    let data: Record<string, unknown>;
-    let correlationid: string;
-    let dataschema: string | undefined;
+  let data: Record<string, unknown>;
+  let correlationid: string;
+  let dataschema: string | undefined;
 
-    if (isEventData(eventSourcingDBEvent.data)) {
-        data = eventSourcingDBEvent.data.payload;
-        correlationid = eventSourcingDBEvent.data.nimbusMeta.correlationid;
-        dataschema = eventSourcingDBEvent.data.nimbusMeta.dataschema;
-    } else {
-        data = eventSourcingDBEvent.data;
-        correlationid = ulid();
-    }
+  if (isEventData(eventSourcingDBEvent.data)) {
+    data = eventSourcingDBEvent.data.payload;
+    correlationid = eventSourcingDBEvent.data.nimbusMeta.correlationid;
+    dataschema = eventSourcingDBEvent.data.nimbusMeta.dataschema;
+  } else {
+    data = eventSourcingDBEvent.data;
+    correlationid = ulid();
+  }
 
-    return createEvent({
-        id: eventSourcingDBEvent.id,
-        time: eventSourcingDBEvent.time.toISOString(),
-        source: eventSourcingDBEvent.source,
-        subject: eventSourcingDBEvent.subject,
-        type: eventSourcingDBEvent.type,
-        correlationid: correlationid,
-        data: data,
-        ...(dataschema && { dataschema: dataschema }),
-    });
+  return createEvent({
+    id: eventSourcingDBEvent.id,
+    time: eventSourcingDBEvent.time.toISOString(),
+    source: eventSourcingDBEvent.source,
+    subject: eventSourcingDBEvent.subject,
+    type: eventSourcingDBEvent.type,
+    correlationid: correlationid,
+    data: data,
+    ...(dataschema && { dataschema: dataschema }),
+  });
 };

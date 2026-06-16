@@ -11,23 +11,23 @@ import { defaultLogOptions } from './options.ts';
  * Silent: No log messages are emitted. This level does not provide a logging function, but it can be used to disable logging.
  */
 export type LogLevel =
-    | 'debug'
-    | 'info'
-    | 'warn'
-    | 'error'
-    | 'critical'
-    | 'silent';
+  | 'debug'
+  | 'info'
+  | 'warn'
+  | 'error'
+  | 'critical'
+  | 'silent';
 
 /**
  * The numeric representation of the LogLeveL type.
  */
 export const numericLogLevel: Record<LogLevel, number> = {
-    debug: 10,
-    info: 20,
-    warn: 30,
-    error: 40,
-    critical: 50,
-    silent: 100,
+  debug: 10,
+  info: 20,
+  warn: 30,
+  error: 40,
+  critical: 50,
+  silent: 100,
 };
 
 /**
@@ -38,15 +38,15 @@ export const numericLogLevel: Record<LogLevel, number> = {
  * @returns {LogLevel} The log level
  */
 export const parseLogLevel = (levelString?: string): LogLevel => {
-    let logLevel = levelString?.toLowerCase();
+  let logLevel = levelString?.toLowerCase();
 
-    if (!logLevel || !Object.keys(numericLogLevel).includes(logLevel)) {
-        console.warn(
-            `Invalid log level: ${levelString}, using default log level: ${defaultLogOptions.logLevel}`,
-        );
+  if (!logLevel || !Object.keys(numericLogLevel).includes(logLevel)) {
+    console.warn(
+      `Invalid log level: ${levelString}, using default log level: ${defaultLogOptions.logLevel}`,
+    );
 
-        logLevel = defaultLogOptions.logLevel;
-    }
+    logLevel = defaultLogOptions.logLevel;
+  }
 
-    return logLevel as LogLevel;
+  return logLevel as LogLevel;
 };

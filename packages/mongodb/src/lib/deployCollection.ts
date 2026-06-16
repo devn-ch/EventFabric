@@ -1,28 +1,28 @@
-import { getLogger } from '@nimbus-cqrs/core';
+import { getLogger } from '@eventfabric-cqrs/core';
 import type {
-    CreateCollectionOptions,
-    Db,
-    IndexDescription,
-    MongoClient,
+  CreateCollectionOptions,
+  Db,
+  IndexDescription,
+  MongoClient,
 } from 'mongodb';
 
 /**
  * Type to define a mongo collection.
  */
 export type MongoCollectionDefinition = {
-    name: string;
-    options?: CreateCollectionOptions;
-    indexes?: IndexDescription[];
+  name: string;
+  options?: CreateCollectionOptions;
+  indexes?: IndexDescription[];
 };
 
 /**
  * Type to define the input for the deployMongoCollection function.
  */
 export type DeployMongoCollectionInput = {
-    mongoClient: MongoClient;
-    dbName: string;
-    collectionDefinition: MongoCollectionDefinition;
-    allowUpdateIndexes: boolean;
+  mongoClient: MongoClient;
+  dbName: string;
+  collectionDefinition: MongoCollectionDefinition;
+  allowUpdateIndexes: boolean;
 };
 
 /**
@@ -39,37 +39,36 @@ export type DeployMongoCollectionInput = {
  * @param {boolean} input.allowUpdateIndexes - Whether to update indexes on existing collections
  */
 export const deployMongoCollection = async ({
-    mongoClient,
-    dbName,
-    collectionDefinition,
-    allowUpdateIndexes,
+  mongoClient,
+  dbName,
+  collectionDefinition,
+  allowUpdateIndexes,
 }: DeployMongoCollectionInput): Promise<string> => {
-    const db = mongoClient.db(dbName);
-    const collectionName = collectionDefinition.name;
+  const db = mongoClient.db(dbName);
+  const collectionName = collectionDefinition.name;
 
+  getLogger().info({
+    category: 'Nimbus',
+    message:
+      `Deploying collection "${collectionName}" on database "${dbName}" ...`,
+  });
+
+  if (await collectionExists(db, collectionDefinition)) {
     getLogger().info({
-        category: 'Nimbus',
-        message:
-            `Deploying collection "${collectionName}" on database "${dbName}" ...`,
+      category: 'Nimbus',
+      message: `Collection "${collectionName}" exists. Updating collection ...`,
     });
+    await updateCollection(db, allowUpdateIndexes, collectionDefinition);
+  } else {
+    getLogger().info({
+      category: 'Nimbus',
+      message:
+        `Collection "${collectionName}" does not exist. Creating collection ...`,
+    });
+    await createCollection(db, collectionDefinition);
+  }
 
-    if (await collectionExists(db, collectionDefinition)) {
-        getLogger().info({
-            category: 'Nimbus',
-            message:
-                `Collection "${collectionName}" exists. Updating collection ...`,
-        });
-        await updateCollection(db, allowUpdateIndexes, collectionDefinition);
-    } else {
-        getLogger().info({
-            category: 'Nimbus',
-            message:
-                `Collection "${collectionName}" does not exist. Creating collection ...`,
-        });
-        await createCollection(db, collectionDefinition);
-    }
-
-    return 'OK';
+  return 'OK';
 };
 
 /**
@@ -80,14 +79,14 @@ export const deployMongoCollection = async ({
  * @returns {Promise<boolean>} Whether the collection exists.
  */
 const collectionExists = async (
-    db: Db,
-    { name }: MongoCollectionDefinition,
+  db: Db,
+  { name }: MongoCollectionDefinition,
 ) => {
-    const collections = await db
-        .listCollections({ name: name }, { nameOnly: true })
-        .toArray();
+  const collections = await db
+    .listCollections({ name: name }, { nameOnly: true })
+    .toArray();
 
-    return collections.some((item) => item.name === name);
+  return collections.some((item) => item.name === name);
 };
 
 /**
@@ -97,23 +96,22 @@ const collectionExists = async (
  * @param {MongoCollectionDefinition} collectionDefinition - The collection definition
  */
 const createCollection = async (
-    db: Db,
-    { name, options, indexes }: MongoCollectionDefinition,
+  db: Db,
+  { name, options, indexes }: MongoCollectionDefinition,
 ) => {
-    await db.createCollection(name, options);
-    getLogger().info({
-        category: 'Nimbus',
-        message: `Collection "${name}" created.`,
-    });
+  await db.createCollection(name, options);
+  getLogger().info({
+    category: 'Nimbus',
+    message: `Collection "${name}" created.`,
+  });
 
-    if (indexes?.length) {
-        await db.collection(name).createIndexes(indexes);
-        getLogger().info({
-            category: 'Nimbus',
-            message:
-                `Added ${indexes.length} indexes for collection "${name}".`,
-        });
-    }
+  if (indexes?.length) {
+    await db.collection(name).createIndexes(indexes);
+    getLogger().info({
+      category: 'Nimbus',
+      message: `Added ${indexes.length} indexes for collection "${name}".`,
+    });
+  }
 };
 
 /**
@@ -124,67 +122,67 @@ const createCollection = async (
  * @param {MongoCollectionDefinition} collectionDefinition - The collection definition
  */
 const updateCollection = async (
-    db: Db,
-    allowUpdateIndexes: boolean,
-    { name, options, indexes }: MongoCollectionDefinition,
+  db: Db,
+  allowUpdateIndexes: boolean,
+  { name, options, indexes }: MongoCollectionDefinition,
 ) => {
-    await db.command({ collMod: name, ...options });
-    getLogger().info({
-        category: 'Nimbus',
-        message: `Collection "${name}" updated.`,
+  await db.command({ collMod: name, ...options });
+  getLogger().info({
+    category: 'Nimbus',
+    message: `Collection "${name}" updated.`,
+  });
+
+  if (allowUpdateIndexes) {
+    const indexesWithNames = (indexes ?? []).map((index) => {
+      if (index.name) {
+        return index;
+      }
+
+      return {
+        ...index,
+        name: Object.entries(index.key)
+          .reduce((acc: string[], [k, v]) => {
+            return [...acc, `${k}_${String(v)}`];
+          }, [])
+          .join('_'),
+      };
     });
 
-    if (allowUpdateIndexes) {
-        const indexesWithNames = (indexes ?? []).map((index) => {
-            if (index.name) {
-                return index;
-            }
+    const existingIndexes = await (
+      await db.collection(name).listIndexes().toArray()
+    )
+      .map((obj) => obj.name)
+      .filter((i) => i !== '_id_');
 
-            return {
-                ...index,
-                name: Object.entries(index.key)
-                    .reduce((acc: string[], [k, v]) => {
-                        return [...acc, `${k}_${String(v)}`];
-                    }, [])
-                    .join('_'),
-            };
-        });
+    const indexesToAdd = indexesWithNames.filter((index) => {
+      return !existingIndexes.includes(index.name);
+    });
 
-        const existingIndexes = await (
-            await db.collection(name).listIndexes().toArray()
-        )
-            .map((obj) => obj.name)
-            .filter((i) => i !== '_id_');
+    const indexesToDelete = existingIndexes.filter((existingIndex) => {
+      return !indexesWithNames.some((i) => i.name === existingIndex);
+    });
 
-        const indexesToAdd = indexesWithNames.filter((index) => {
-            return !existingIndexes.includes(index.name);
-        });
-
-        const indexesToDelete = existingIndexes.filter((existingIndex) => {
-            return !indexesWithNames.some((i) => i.name === existingIndex);
-        });
-
-        if (indexesToAdd.length) {
-            await db.collection(name).createIndexes(indexesToAdd);
-            getLogger().info({
-                category: 'Nimbus',
-                message:
-                    `Added ${indexesToAdd.length} indexes for collection "${name}".`,
-            });
-        }
-
-        if (indexesToDelete.length) {
-            await Promise.all(
-                indexesToDelete?.map((index) => {
-                    console.log(`Dropping ${index}`);
-                    return db.collection(name).dropIndex(index);
-                }),
-            );
-            getLogger().info({
-                category: 'Nimbus',
-                message:
-                    `Deleted ${indexesToDelete.length} indexes for collection "${name}".`,
-            });
-        }
+    if (indexesToAdd.length) {
+      await db.collection(name).createIndexes(indexesToAdd);
+      getLogger().info({
+        category: 'Nimbus',
+        message:
+          `Added ${indexesToAdd.length} indexes for collection "${name}".`,
+      });
     }
+
+    if (indexesToDelete.length) {
+      await Promise.all(
+        indexesToDelete?.map((index) => {
+          console.log(`Dropping ${index}`);
+          return db.collection(name).dropIndex(index);
+        }),
+      );
+      getLogger().info({
+        category: 'Nimbus',
+        message:
+          `Deleted ${indexesToDelete.length} indexes for collection "${name}".`,
+      });
+    }
+  }
 };

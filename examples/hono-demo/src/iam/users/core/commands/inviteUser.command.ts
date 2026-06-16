@@ -1,4 +1,4 @@
-import { commandSchema, InvalidInputException } from '@nimbus-cqrs/core';
+import { commandSchema, InvalidInputException } from '@eventfabric-cqrs/core';
 import { ObjectId } from 'mongodb';
 import { z } from 'zod';
 import { UserState } from '../domain/user.ts';

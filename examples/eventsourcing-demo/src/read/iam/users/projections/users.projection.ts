@@ -1,5 +1,5 @@
-import { getLogger } from '@nimbus-cqrs/core';
-import { eventSourcingDBEventToNimbusEvent } from '@nimbus-cqrs/eventsourcingdb';
+import { getLogger } from '@eventfabric-cqrs/core';
+import { eventSourcingDBEventToNimbusEvent } from '@eventfabric-cqrs/eventsourcingdb';
 import { Event as EventSourcingDBEvent } from 'eventsourcingdb';
 import { ObjectId } from 'mongodb';
 import {

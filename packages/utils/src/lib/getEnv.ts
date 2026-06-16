@@ -1,8 +1,8 @@
-import { GenericException, getLogger } from '@nimbus-cqrs/core';
+import { GenericException, getLogger } from '@eventfabric-cqrs/core';
 import process from 'node:process';
 
 type GetEnvInput = {
-    variables: string[];
+  variables: string[];
 };
 
 /**
@@ -15,32 +15,32 @@ type GetEnvInput = {
  * @throws {GenericException} Thrown if any of the requested variables are not defined
  */
 export const getEnv = ({
-    variables,
+  variables,
 }: GetEnvInput): Record<string, string> => {
-    const envVars: Record<string, string> = {};
-    const missingEnvVars: string[] = [];
+  const envVars: Record<string, string> = {};
+  const missingEnvVars: string[] = [];
 
-    for (const variable of variables) {
-        if (!process.env[variable]) {
-            missingEnvVars.push(variable);
-        }
-
-        envVars[variable] = process.env[variable] as string;
+  for (const variable of variables) {
+    if (!process.env[variable]) {
+      missingEnvVars.push(variable);
     }
 
-    if (missingEnvVars.length > 0) {
-        getLogger().error({
-            category: 'Nimbus',
-            message: 'Undefined environment variables',
-            data: {
-                undefinedVariables: missingEnvVars,
-            },
-        });
+    envVars[variable] = process.env[variable] as string;
+  }
 
-        throw new GenericException('Undefined environment variables', {
-            undefinedVariables: missingEnvVars,
-        });
-    }
+  if (missingEnvVars.length > 0) {
+    getLogger().error({
+      category: 'Nimbus',
+      message: 'Undefined environment variables',
+      data: {
+        undefinedVariables: missingEnvVars,
+      },
+    });
 
-    return envVars;
+    throw new GenericException('Undefined environment variables', {
+      undefinedVariables: missingEnvVars,
+    });
+  }
+
+  return envVars;
 };

@@ -1,4 +1,6 @@
-# Nimbus Hono
+# EventFabric Hono
+
+Adapters and middleware that bridge [Hono](https://hono.dev/) and the Nimbus framework. The package gives your Hono app a correlation ID per request, structured request/response logging with OpenTelemetry tracing, and a single error handler that turns Nimbus exceptions into clean HTTP responses.
 
 <img
     src="https://raw.githubusercontent.com/devn-ch/EventFabric/next/media/EventFabric.webp"
@@ -6,28 +8,26 @@
     alt="Event Fabric"
 />
 
-Adapters and middleware that bridge [Hono](https://hono.dev/) and the Nimbus framework. The package gives your Hono app a correlation ID per request, structured request/response logging with OpenTelemetry tracing, and a single error handler that turns Nimbus exceptions into clean HTTP responses.
-
-Refer to the [Nimbus main repository](https://github.com/overlap-dev/Nimbus) or the [Nimbus documentation](https://nimbus.overlap.at) for more information about the Nimbus framework.
+Refer to the [EventFabric main repository](https://github.com/devn-ch/EventFabric/) or the [EventFabric documentation](https://devn-ch.github.io/EventFabric/) for more information about the EventFabric framework.
 
 ## Install
 
 ```bash
 # Deno
-deno add npm:@nimbus-cqrs/hono
+deno add npm:@eventfabric-cqrs/hono
 
 # NPM
-npm install @nimbus-cqrs/hono
+npm install @eventfabric-cqrs/hono
 
 # Bun
-bun add @nimbus-cqrs/hono
+bun add @eventfabric-cqrs/hono
 ```
 
 `hono` itself is a peer dependency — install it (or use one of the runtimes that ship it via `npm:`/`jsr:` specifiers).
 
 # Examples
 
-For detailed documentation, please refer to the [Nimbus documentation](https://nimbus.overlap.at).
+For detailed documentation, please refer to the [EventFabric documentation](https://github.com/devn-ch/EventFabric/).
 
 ## Quick start
 
@@ -35,7 +35,7 @@ A typical setup wires up all three pieces together: the correlation ID middlewar
 
 ```typescript
 import { Hono } from "hono";
-import { correlationId, handleError, logger } from "@nimbus-cqrs/hono";
+import { correlationId, handleError, logger } from "@eventfabric-cqrs/hono";
 
 const app = new Hono();
 
@@ -55,7 +55,7 @@ export default app;
 
 ```typescript
 import { Hono } from "hono";
-import { correlationId, getCorrelationId } from "@nimbus-cqrs/hono";
+import { correlationId, getCorrelationId } from "@eventfabric-cqrs/hono";
 
 const app = new Hono();
 
@@ -93,7 +93,7 @@ When `enableTracing` is on (default), it also:
 
 ```typescript
 import { Hono } from "hono";
-import { correlationId, logger } from "@nimbus-cqrs/hono";
+import { correlationId, logger } from "@eventfabric-cqrs/hono";
 
 const app = new Hono();
 
@@ -114,8 +114,8 @@ Set `enableTracing: false` if you only want the request/response log lines and d
 
 ```typescript
 import { Hono } from "hono";
-import { NotFoundException } from "@nimbus-cqrs/core";
-import { handleError } from "@nimbus-cqrs/hono";
+import { NotFoundException } from "@eventfabric-cqrs/core";
+import { handleError } from "@eventfabric-cqrs/hono";
 
 const app = new Hono();
 
@@ -142,7 +142,9 @@ This means your domain code can stay framework-agnostic — throw Nimbus excepti
 
 # License
 
-Copyright 2024-present Overlap GmbH & Co KG (https://overlap.at)
+Copyright 2026 devn.ch
+
+Copyright 2024 Overlap GmbH & Co KG (https://overlap.at)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

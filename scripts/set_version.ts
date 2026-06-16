@@ -1,11 +1,11 @@
 #!/usr/bin/env -S deno run -A
 
 /**
- * Sets the Nimbus release version across the repo.
+ * Sets the EventFabric release version across the repo.
  *
  * Updates:
  *   - `version` in every `packages/<pkg>/deno.json`
- *   - every `@nimbus-cqrs/*` dependency in `examples/{node,bun}-demo/package.json`
+ *   - every `@eventfabric-cqrs/*` dependency in `examples/{node,bun}-demo/package.json`
  *
  * The version is written verbatim into `deno.json`, and as a caret
  * range (`^<version>`) into the example `package.json` files.
@@ -24,7 +24,7 @@ import { dirname, fromFileUrl, join, resolve } from 'jsr:@std/path@^1.0.9';
 
 const repoRoot = resolve(dirname(fromFileUrl(import.meta.url)), '..');
 
-const SCOPE = '@nimbus-cqrs';
+const SCOPE = '@eventfabric-cqrs';
 
 const denoPackages = [
     'core',
@@ -75,7 +75,7 @@ async function updateDenoJson(path: string): Promise<boolean> {
 }
 
 /**
- * Rewrites every `"@nimbus-cqrs/<pkg>": "<range>"` entry in a
+ * Rewrites every `"@eventfabric-cqrs/<pkg>": "<range>"` entry in a
  * `package.json` to use the new caret range. Other dependencies are
  * left untouched. Returns the list of bumped specifiers.
  */
@@ -99,7 +99,7 @@ async function updateExamplePackageJson(path: string): Promise<string[]> {
     return bumped;
 }
 
-console.log(`Setting Nimbus version to ${version}\n`);
+console.log(`Setting EventFabric version to ${version}\n`);
 
 for (const pkg of denoPackages) {
     const path = join(repoRoot, 'packages', pkg, 'deno.json');

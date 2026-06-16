@@ -16,17 +16,17 @@ import { withAsyncGeneratorSpan } from './tracing.ts';
  * @returns An async generator yielding EventSourcingDB events.
  */
 export const readEvents = (
-    subject: string,
-    options: ReadEventsOptions,
-    signal?: AbortSignal,
+  subject: string,
+  options: ReadEventsOptions,
+  signal?: AbortSignal,
 ): AsyncGenerator<Event, void, void> => {
-    return withAsyncGeneratorSpan('readEvents', () => {
-        const eventSourcingDBClient = getEventSourcingDBClient();
+  return withAsyncGeneratorSpan('readEvents', () => {
+    const eventSourcingDBClient = getEventSourcingDBClient();
 
-        return eventSourcingDBClient.readEvents(
-            subject,
-            options,
-            signal,
-        );
-    });
+    return eventSourcingDBClient.readEvents(
+      subject,
+      options,
+      signal,
+    );
+  });
 };

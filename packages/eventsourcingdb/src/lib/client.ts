@@ -1,4 +1,4 @@
-import { GenericException, getLogger } from '@nimbus-cqrs/core';
+import { GenericException, getLogger } from '@eventfabric-cqrs/core';
 import { Client } from 'eventsourcingdb';
 import { type EventObserver, initEventObserver } from './eventObserver.ts';
 
@@ -8,18 +8,18 @@ let eventSourcingDBClient: Client | null = null;
  * Configuration options for setting up the EventSourcingDB client.
  */
 export type SetupEventSourcingDBClientInput = {
-    /**
-     * The URL of the EventSourcingDB server.
-     */
-    url: URL;
-    /**
-     * The API token for authenticating with EventSourcingDB.
-     */
-    apiToken: string;
-    /**
-     * An optional array of event observers to observe events.
-     */
-    eventObservers?: EventObserver[];
+  /**
+   * The URL of the EventSourcingDB server.
+   */
+  url: URL;
+  /**
+   * The API token for authenticating with EventSourcingDB.
+   */
+  apiToken: string;
+  /**
+   * An optional array of event observers to observe events.
+   */
+  eventObservers?: EventObserver[];
 };
 
 /**
@@ -74,49 +74,49 @@ export type SetupEventSourcingDBClientInput = {
  * ```
  */
 export const setupEventSourcingDBClient = async (
-    { url, apiToken, eventObservers }: SetupEventSourcingDBClientInput,
+  { url, apiToken, eventObservers }: SetupEventSourcingDBClientInput,
 ): Promise<void> => {
-    eventSourcingDBClient = new Client(
-        url,
-        apiToken,
-    );
+  eventSourcingDBClient = new Client(
+    url,
+    apiToken,
+  );
 
-    try {
-        await eventSourcingDBClient.ping();
-    } catch (error) {
-        getLogger().critical({
-            category: 'Nimbus',
-            message: 'Could not connect to EventSourcingDB',
-            error: error as Error,
-        });
-        throw new GenericException(
-            'Could not connect to EventSourcingDB',
-        );
-    }
-
-    try {
-        await eventSourcingDBClient.verifyApiToken();
-    } catch (error) {
-        getLogger().error({
-            category: 'Nimbus',
-            message: 'Invalid API token. Please check your API token.',
-            error: error as Error,
-        });
-        throw new GenericException(
-            'Invalid API token. Please check your API token.',
-        );
-    }
-
-    getLogger().info({
-        category: 'Nimbus',
-        message: 'EventSourcingDB client initialized successfully',
+  try {
+    await eventSourcingDBClient.ping();
+  } catch (error) {
+    getLogger().critical({
+      category: 'Nimbus',
+      message: 'Could not connect to EventSourcingDB',
+      error: error as Error,
     });
+    throw new GenericException(
+      'Could not connect to EventSourcingDB',
+    );
+  }
 
-    if (eventObservers?.length) {
-        for (const eventObserver of eventObservers) {
-            initEventObserver(eventObserver);
-        }
+  try {
+    await eventSourcingDBClient.verifyApiToken();
+  } catch (error) {
+    getLogger().error({
+      category: 'Nimbus',
+      message: 'Invalid API token. Please check your API token.',
+      error: error as Error,
+    });
+    throw new GenericException(
+      'Invalid API token. Please check your API token.',
+    );
+  }
+
+  getLogger().info({
+    category: 'Nimbus',
+    message: 'EventSourcingDB client initialized successfully',
+  });
+
+  if (eventObservers?.length) {
+    for (const eventObserver of eventObservers) {
+      initEventObserver(eventObserver);
     }
+  }
 };
 
 /**
@@ -137,11 +137,11 @@ export const setupEventSourcingDBClient = async (
  * ```
  */
 export const getEventSourcingDBClient = (): Client => {
-    if (!eventSourcingDBClient) {
-        throw new GenericException(
-            'EventSourcingDB client not yet initialized. Please call setupEventSourcingDBClient() first.',
-        );
-    }
+  if (!eventSourcingDBClient) {
+    throw new GenericException(
+      'EventSourcingDB client not yet initialized. Please call setupEventSourcingDBClient() first.',
+    );
+  }
 
-    return eventSourcingDBClient;
+  return eventSourcingDBClient;
 };

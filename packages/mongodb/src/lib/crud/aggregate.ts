@@ -1,4 +1,4 @@
-import { GenericException } from '@nimbus-cqrs/core';
+import { GenericException } from '@eventfabric-cqrs/core';
 import type { AggregateOptions, Collection, Document } from 'mongodb';
 import type { ZodType } from 'zod';
 import { handleMongoError } from '../handleMongoError.ts';
@@ -8,18 +8,18 @@ import { withSpan } from '../tracing.ts';
  * Type to define the input for the aggregate function.
  */
 export type AggregateInput<TData> = {
-    collection: Collection<Document>;
-    aggregation: Document[];
-    mapDocument: (document: Document) => TData;
-    outputType: ZodType;
-    options?: AggregateOptions;
+  collection: Collection<Document>;
+  aggregation: Document[];
+  mapDocument: (document: Document) => TData;
+  outputType: ZodType;
+  options?: AggregateOptions;
 };
 
 /**
  * Type to define the aggregate function.
  */
 export type Aggregate = <TData>(
-    input: AggregateInput<TData>,
+  input: AggregateInput<TData>,
 ) => Promise<TData[]>;
 
 /**
@@ -36,32 +36,30 @@ export type Aggregate = <TData>(
  * @returns {Promise<TData[]>} The aggregated documents.
  */
 export const aggregate: Aggregate = <TData>({
-    collection,
-    aggregation,
-    mapDocument,
-    outputType,
-    options,
+  collection,
+  aggregation,
+  mapDocument,
+  outputType,
+  options,
 }: AggregateInput<TData>) => {
-    return withSpan<TData[]>('aggregate', collection, async () => {
-        let res: Document[] = [];
+  return withSpan<TData[]>('aggregate', collection, async () => {
+    let res: Document[] = [];
 
-        try {
-            const aggregationRes = collection.aggregate(aggregation, options);
-            res = await aggregationRes.toArray();
-        } catch (error) {
-            throw handleMongoError(error);
-        }
+    try {
+      const aggregationRes = collection.aggregate(aggregation, options);
+      res = await aggregationRes.toArray();
+    } catch (error) {
+      throw handleMongoError(error);
+    }
 
-        try {
-            return res.map((item) =>
-                outputType.parse(mapDocument(item)) as TData
-            );
-        } catch (error) {
-            const exception = error instanceof Error
-                ? new GenericException().fromError(error)
-                : new GenericException();
+    try {
+      return res.map((item) => outputType.parse(mapDocument(item)) as TData);
+    } catch (error) {
+      const exception = error instanceof Error
+        ? new GenericException().fromError(error)
+        : new GenericException();
 
-            throw exception;
-        }
-    });
+      throw exception;
+    }
+  });
 };

@@ -1,8 +1,8 @@
 import {
     getMongoConnectionManager,
     MongoDBRepository,
-} from '@nimbus-cqrs/mongodb';
-import { getEnv } from '@nimbus-cqrs/utils';
+} from '@eventfabric-cqrs/mongodb';
+import { getEnv } from '@eventfabric-cqrs/utils';
 import { Document, ObjectId } from 'mongodb';
 import { User, USERS_COLLECTION } from './users.collection.ts';
 

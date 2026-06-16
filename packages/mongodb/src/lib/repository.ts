@@ -1,19 +1,19 @@
-import { NotFoundException } from '@nimbus-cqrs/core';
+import { NotFoundException } from '@eventfabric-cqrs/core';
 import { toSnakeCase } from '@std/text';
 import type {
-    BulkWriteOptions,
-    Collection,
-    CountDocumentsOptions,
-    DeleteOptions,
-    Document,
-    Filter,
-    FindOptions,
-    InsertOneOptions,
-    ReplaceOptions,
-    Sort,
-    UpdateFilter,
-    UpdateOptions,
-    UpdateResult,
+  BulkWriteOptions,
+  Collection,
+  CountDocumentsOptions,
+  DeleteOptions,
+  Document,
+  Filter,
+  FindOptions,
+  InsertOneOptions,
+  ReplaceOptions,
+  Sort,
+  UpdateFilter,
+  UpdateOptions,
+  UpdateResult,
 } from 'mongodb';
 import { ObjectId } from 'mongodb';
 import type { ZodType } from 'zod';
@@ -34,7 +34,7 @@ import { updateOne } from './crud/updateOne.ts';
  * Equivalent to the MongoDB WithId type but for the repository entity.
  */
 export type WithStringId<TSchema> = Omit<TSchema, '_id'> & {
-    _id: string;
+  _id: string;
 };
 
 /**
@@ -92,346 +92,338 @@ export type WithStringId<TSchema> = Omit<TSchema, '_id'> & {
  * ```
  */
 export class MongoDBRepository<
-    TEntity extends WithStringId<Record<string, any>>,
+  TEntity extends WithStringId<Record<string, any>>,
 > {
-    protected _getCollection: () => Promise<Collection<Document>>;
-    protected _entityType: ZodType;
-    protected _entityName: string;
+  protected _getCollection: () => Promise<Collection<Document>>;
+  protected _entityType: ZodType;
+  protected _entityName: string;
 
-    constructor(
-        getCollection: () => Promise<Collection<Document>>,
-        entityType: ZodType,
-        entityName?: string,
-    ) {
-        this._getCollection = getCollection;
-        this._entityType = entityType;
-        this._entityName = entityName ?? 'Document';
-    }
+  constructor(
+    getCollection: () => Promise<Collection<Document>>,
+    entityType: ZodType,
+    entityName?: string,
+  ) {
+    this._getCollection = getCollection;
+    this._entityType = entityType;
+    this._entityName = entityName ?? 'Document';
+  }
 
-    /**
-     * Function to map the MongoDB Document to the Entity.
-     * ZodType.parse is used to ensure the data is valid and type-safe.
-     */
-    protected _mapDocumentToEntity(doc: Document): TEntity {
-        return this._entityType.parse(doc) as TEntity;
-    }
+  /**
+   * Function to map the MongoDB Document to the Entity.
+   * ZodType.parse is used to ensure the data is valid and type-safe.
+   */
+  protected _mapDocumentToEntity(doc: Document): TEntity {
+    return this._entityType.parse(doc) as TEntity;
+  }
 
-    /**
-     * Function to map the Entity to a  MongoDB Document.
-     */
-    protected _mapEntityToDocument(item: TEntity): Document {
-        return item as Document;
-    }
+  /**
+   * Function to map the Entity to a  MongoDB Document.
+   */
+  protected _mapEntityToDocument(item: TEntity): Document {
+    return item as Document;
+  }
 
-    /**
-     * Find one document based on a given filter.
-     */
-    public async findOne({
+  /**
+   * Find one document based on a given filter.
+   */
+  public async findOne({
+    filter,
+  }: {
+    filter: Filter<Document>;
+  }): Promise<TEntity> {
+    try {
+      const collection = await this._getCollection();
+
+      const res = await findOne({
+        collection,
         filter,
-    }: {
-        filter: Filter<Document>;
-    }): Promise<TEntity> {
-        try {
-            const collection = await this._getCollection();
+        mapDocument: this._mapDocumentToEntity,
+        outputType: this._entityType,
+      });
 
-            const res = await findOne({
-                collection,
-                filter,
-                mapDocument: this._mapDocumentToEntity,
-                outputType: this._entityType,
-            });
+      return res;
+    } catch (error: any) {
+      if (error.name === 'NOT_FOUND') {
+        throw new NotFoundException(
+          `${this._entityName} not found`,
+          {
+            errorCode: `${
+              toSnakeCase(this._entityName).toUpperCase()
+            }_NOT_FOUND`,
+            reason:
+              `Could not find ${this._entityName} matching the given filter`,
+          },
+        );
+      }
 
-            return res;
-        } catch (error: any) {
-            if (error.name === 'NOT_FOUND') {
-                throw new NotFoundException(
-                    `${this._entityName} not found`,
-                    {
-                        errorCode: `${
-                            toSnakeCase(this._entityName).toUpperCase()
-                        }_NOT_FOUND`,
-                        reason:
-                            `Could not find ${this._entityName} matching the given filter`,
-                    },
-                );
-            }
+      throw error;
+    }
+  }
 
-            throw error;
-        }
+  /**
+   * Find multiple documents based on a given filter.
+   */
+  public async find({
+    filter,
+    limit,
+    skip,
+    sort,
+    project,
+    options,
+  }: {
+    filter: Filter<Document>;
+    limit?: number;
+    skip?: number;
+    sort?: Sort;
+    project?: Document;
+    options?: FindOptions;
+  }): Promise<TEntity[]> {
+    const collection = await this._getCollection();
+
+    return find({
+      collection,
+      filter,
+      limit,
+      skip,
+      sort,
+      project,
+      mapDocument: this._mapDocumentToEntity,
+      outputType: this._entityType,
+      options,
+    });
+  }
+
+  /**
+   * Count all documents matching a given filter.
+   */
+  public async countDocuments({
+    filter,
+    options,
+  }: {
+    filter: Filter<Document>;
+    options?: CountDocumentsOptions;
+  }): Promise<number> {
+    const collection = await this._getCollection();
+
+    return countDocuments({
+      collection,
+      filter,
+      options,
+    });
+  }
+
+  /**
+   * Insert a single new document.
+   */
+  public async insertOne({
+    item,
+  }: {
+    item: TEntity;
+    options?: InsertOneOptions;
+  }): Promise<TEntity> {
+    const collection = await this._getCollection();
+
+    await insertOne({
+      collection,
+      document: this._mapEntityToDocument(item),
+    });
+
+    return item;
+  }
+
+  /**
+   * Insert multiple new documents.
+   */
+  public async insertMany({
+    items,
+    options,
+  }: {
+    items: TEntity[];
+    options?: BulkWriteOptions;
+  }): Promise<TEntity[]> {
+    const collection = await this._getCollection();
+
+    await insertMany({
+      collection,
+      documents: items.map(this._mapEntityToDocument),
+      options,
+    });
+
+    return items;
+  }
+
+  /**
+   * Update a single document.
+   */
+  public async updateOne({
+    filter,
+    update,
+    options,
+  }: {
+    filter: Filter<Document>;
+    update: UpdateFilter<Document> | Document[];
+    options?: UpdateOptions;
+  }): Promise<UpdateResult<Document>> {
+    const collection = await this._getCollection();
+
+    const res = await updateOne({
+      collection,
+      filter,
+      update,
+      options,
+    });
+
+    if (res.matchedCount === 0) {
+      throw new NotFoundException(
+        `${this._entityName} not found`,
+        {
+          errorCode: `${toSnakeCase(this._entityName).toUpperCase()}_NOT_FOUND`,
+          reason:
+            `Could not find ${this._entityName} matching the given filter`,
+        },
+      );
     }
 
-    /**
-     * Find multiple documents based on a given filter.
-     */
-    public async find({
-        filter,
-        limit,
-        skip,
-        sort,
-        project,
+    return res;
+  }
+
+  /**
+   * Update multiple documents.
+   */
+  public async updateMany({
+    filter,
+    update,
+    options,
+  }: {
+    filter: Filter<Document>;
+    update: UpdateFilter<Document> | Document[];
+    options?: UpdateOptions;
+  }): Promise<UpdateResult<Document>> {
+    const collection = await this._getCollection();
+
+    const res = await updateMany({
+      collection,
+      filter,
+      update,
+      options,
+    });
+
+    return res;
+  }
+
+  /**
+   * Replace a single document.
+   */
+  public async replaceOne({
+    item,
+    options,
+  }: {
+    item: TEntity;
+    options?: ReplaceOptions;
+  }): Promise<TEntity> {
+    const collection = await this._getCollection();
+
+    const res = await replaceOne({
+      collection,
+      filter: { _id: new ObjectId(item._id) },
+      replacement: this._mapEntityToDocument(item),
+      options,
+    });
+
+    if (res.matchedCount === 0) {
+      throw new NotFoundException(
+        `${this._entityName} not found`,
+        {
+          errorCode: `${toSnakeCase(this._entityName).toUpperCase()}_NOT_FOUND`,
+          reason: `Could not find ${this._entityName} with the id: ${item._id}`,
+        },
+      );
+    }
+
+    return item;
+  }
+
+  /**
+   * Replace multiple documents.
+   */
+  public async replaceMany({
+    items,
+    options,
+  }: {
+    items: TEntity[];
+    options?: BulkWriteOptions;
+  }): Promise<TEntity[]> {
+    if (items.length > 0) {
+      const collection = await this._getCollection();
+
+      const operations = items.map((item) => ({
+        replaceOne: {
+          filter: { _id: new ObjectId(item._id) },
+          replacement: this._mapEntityToDocument(item),
+        },
+      }));
+
+      await bulkWrite({
+        collection,
+        operations: operations,
         options,
-    }: {
-        filter: Filter<Document>;
-        limit?: number;
-        skip?: number;
-        sort?: Sort;
-        project?: Document;
-        options?: FindOptions;
-    }): Promise<TEntity[]> {
-        const collection = await this._getCollection();
-
-        return find({
-            collection,
-            filter,
-            limit,
-            skip,
-            sort,
-            project,
-            mapDocument: this._mapDocumentToEntity,
-            outputType: this._entityType,
-            options,
-        });
+      });
     }
 
-    /**
-     * Count all documents matching a given filter.
-     */
-    public async countDocuments({
-        filter,
-        options,
-    }: {
-        filter: Filter<Document>;
-        options?: CountDocumentsOptions;
-    }): Promise<number> {
-        const collection = await this._getCollection();
+    return items;
+  }
 
-        return countDocuments({
-            collection,
-            filter,
-            options,
-        });
+  /**
+   * Delete a single document.
+   */
+  public async deleteOne({
+    item,
+    options,
+  }: {
+    item: TEntity;
+    options?: DeleteOptions;
+  }): Promise<TEntity> {
+    const collection = await this._getCollection();
+
+    const res = await deleteOne({
+      collection,
+      filter: { _id: new ObjectId(item._id) },
+      options,
+    });
+
+    if (res.deletedCount === 0) {
+      throw new NotFoundException(
+        `${this._entityName} not found`,
+        {
+          errorCode: `${toSnakeCase(this._entityName).toUpperCase()}_NOT_FOUND`,
+          reason: `Could not find ${this._entityName} with the id: ${item._id}`,
+        },
+      );
     }
 
-    /**
-     * Insert a single new document.
-     */
-    public async insertOne({
-        item,
-    }: {
-        item: TEntity;
-        options?: InsertOneOptions;
-    }): Promise<TEntity> {
-        const collection = await this._getCollection();
+    return item;
+  }
 
-        await insertOne({
-            collection,
-            document: this._mapEntityToDocument(item),
-        });
+  /**
+   * Delete multiple documents.
+   */
+  public async deleteMany({
+    items,
+    options,
+  }: {
+    items: TEntity[];
+    options?: DeleteOptions;
+  }): Promise<TEntity[]> {
+    const collection = await this._getCollection();
 
-        return item;
-    }
+    await deleteMany({
+      collection,
+      filter: {
+        _id: { $in: items.map((item) => new ObjectId(item._id)) },
+      },
+      options,
+    });
 
-    /**
-     * Insert multiple new documents.
-     */
-    public async insertMany({
-        items,
-        options,
-    }: {
-        items: TEntity[];
-        options?: BulkWriteOptions;
-    }): Promise<TEntity[]> {
-        const collection = await this._getCollection();
-
-        await insertMany({
-            collection,
-            documents: items.map(this._mapEntityToDocument),
-            options,
-        });
-
-        return items;
-    }
-
-    /**
-     * Update a single document.
-     */
-    public async updateOne({
-        filter,
-        update,
-        options,
-    }: {
-        filter: Filter<Document>;
-        update: UpdateFilter<Document> | Document[];
-        options?: UpdateOptions;
-    }): Promise<UpdateResult<Document>> {
-        const collection = await this._getCollection();
-
-        const res = await updateOne({
-            collection,
-            filter,
-            update,
-            options,
-        });
-
-        if (res.matchedCount === 0) {
-            throw new NotFoundException(
-                `${this._entityName} not found`,
-                {
-                    errorCode: `${
-                        toSnakeCase(this._entityName).toUpperCase()
-                    }_NOT_FOUND`,
-                    reason:
-                        `Could not find ${this._entityName} matching the given filter`,
-                },
-            );
-        }
-
-        return res;
-    }
-
-    /**
-     * Update multiple documents.
-     */
-    public async updateMany({
-        filter,
-        update,
-        options,
-    }: {
-        filter: Filter<Document>;
-        update: UpdateFilter<Document> | Document[];
-        options?: UpdateOptions;
-    }): Promise<UpdateResult<Document>> {
-        const collection = await this._getCollection();
-
-        const res = await updateMany({
-            collection,
-            filter,
-            update,
-            options,
-        });
-
-        return res;
-    }
-
-    /**
-     * Replace a single document.
-     */
-    public async replaceOne({
-        item,
-        options,
-    }: {
-        item: TEntity;
-        options?: ReplaceOptions;
-    }): Promise<TEntity> {
-        const collection = await this._getCollection();
-
-        const res = await replaceOne({
-            collection,
-            filter: { _id: new ObjectId(item._id) },
-            replacement: this._mapEntityToDocument(item),
-            options,
-        });
-
-        if (res.matchedCount === 0) {
-            throw new NotFoundException(
-                `${this._entityName} not found`,
-                {
-                    errorCode: `${
-                        toSnakeCase(this._entityName).toUpperCase()
-                    }_NOT_FOUND`,
-                    reason:
-                        `Could not find ${this._entityName} with the id: ${item._id}`,
-                },
-            );
-        }
-
-        return item;
-    }
-
-    /**
-     * Replace multiple documents.
-     */
-    public async replaceMany({
-        items,
-        options,
-    }: {
-        items: TEntity[];
-        options?: BulkWriteOptions;
-    }): Promise<TEntity[]> {
-        if (items.length > 0) {
-            const collection = await this._getCollection();
-
-            const operations = items.map((item) => ({
-                replaceOne: {
-                    filter: { _id: new ObjectId(item._id) },
-                    replacement: this._mapEntityToDocument(item),
-                },
-            }));
-
-            await bulkWrite({
-                collection,
-                operations: operations,
-                options,
-            });
-        }
-
-        return items;
-    }
-
-    /**
-     * Delete a single document.
-     */
-    public async deleteOne({
-        item,
-        options,
-    }: {
-        item: TEntity;
-        options?: DeleteOptions;
-    }): Promise<TEntity> {
-        const collection = await this._getCollection();
-
-        const res = await deleteOne({
-            collection,
-            filter: { _id: new ObjectId(item._id) },
-            options,
-        });
-
-        if (res.deletedCount === 0) {
-            throw new NotFoundException(
-                `${this._entityName} not found`,
-                {
-                    errorCode: `${
-                        toSnakeCase(this._entityName).toUpperCase()
-                    }_NOT_FOUND`,
-                    reason:
-                        `Could not find ${this._entityName} with the id: ${item._id}`,
-                },
-            );
-        }
-
-        return item;
-    }
-
-    /**
-     * Delete multiple documents.
-     */
-    public async deleteMany({
-        items,
-        options,
-    }: {
-        items: TEntity[];
-        options?: DeleteOptions;
-    }): Promise<TEntity[]> {
-        const collection = await this._getCollection();
-
-        await deleteMany({
-            collection,
-            filter: {
-                _id: { $in: items.map((item) => new ObjectId(item._id)) },
-            },
-            options,
-        });
-
-        return items;
-    }
+    return items;
+  }
 }

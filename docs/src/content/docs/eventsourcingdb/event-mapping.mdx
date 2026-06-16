@@ -66,7 +66,7 @@ type EventFabricEventMetadata = {
 The `nimbusEventToEventSourcingDBEventCandidate` function converts a EventFabric event into an EventSourcingDB event candidate:
 
 ```typescript
-import { nimbusEventToEventSourcingDBEventCandidate } from "@nimbus-cqrs/eventsourcingdb";
+import { nimbusEventToEventSourcingDBEventCandidate } from "@eventfabric-cqrs/eventsourcingdb";
 
 const eventCandidate = nimbusEventToEventSourcingDBEventCandidate(nimbusEvent);
 ```
@@ -91,22 +91,22 @@ You typically don't need to call this function directly. The [`writeEvents`](/ev
 The `eventSourcingDBEventToEventFabricEvent` function converts an EventSourcingDB event back into a EventFabric event:
 
 ```typescript
-import { eventSourcingDBEventToNimbusEvent } from "@nimbus-cqrs/eventsourcingdb";
+import { eventSourcingDBEventToNimbusEvent } from "@eventfabric-cqrs/eventsourcingdb";
 import type { Event } from "eventsourcingdb";
 
 const handleEvent = (eventSourcingDBEvent: Event) => {
-    const nimbusEvent = eventSourcingDBEventToNimbusEvent(eventSourcingDBEvent);
+    const eventfabricEvent = eventSourcingDBEventToNimbusEvent(eventSourcingDBEvent);
 
-    console.log(nimbusEvent.correlationid); // Restored from nimbusMeta
-    console.log(nimbusEvent.data); // Original payload
+    console.log(eventfabricEvent.correlationid); // Restored from nimbusMeta
+    console.log(eventfabricEvent.data); // Original payload
 };
 ```
 
 The function supports generic typing for specific event types:
 
 ```typescript
-import { Event } from "@nimbus-cqrs/core";
-import { eventSourcingDBEventToNimbusEvent } from "@nimbus-cqrs/eventsourcingdb";
+import { Event } from "@eventfabric-cqrs/core";
+import { eventSourcingDBEventToNimbusEvent } from "@eventfabric-cqrs/eventsourcingdb";
 
 const event = eventSourcingDBEventToNimbusEvent<Event>(eventSourcingDBEvent);
 ```
@@ -123,7 +123,7 @@ If the EventSourcingDB event was not written by EventFabric (i.e., it does not c
 The `isEventData` type guard checks whether event data conforms to the `EventData` structure:
 
 ```typescript
-import { isEventData } from "@nimbus-cqrs/eventsourcingdb";
+import { isEventData } from "@eventfabric-cqrs/eventsourcingdb";
 
 if (isEventData(event.data)) {
     // event.data is typed as EventData

@@ -115,7 +115,7 @@ You can use `handleMongoError` in your own database operations:
 
 ```typescript
 import { handleMongoError } from "@nimbus-cqrs/mongodb";
-import { GenericException } from "@nimbus-cqrs/core";
+import { GenericException } from "@eventfabric-cqrs/core";
 
 const customDatabaseOperation = async (collection: Collection) => {
     try {

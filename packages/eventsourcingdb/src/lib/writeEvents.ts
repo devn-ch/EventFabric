@@ -1,4 +1,4 @@
-import type { Event } from '@nimbus-cqrs/core';
+import type { Event } from '@eventfabric-cqrs/core';
 import { context, propagation } from '@opentelemetry/api';
 import type { EventCandidate, Precondition } from 'eventsourcingdb';
 import { getEventSourcingDBClient } from './client.ts';
@@ -13,26 +13,26 @@ import { withSpan } from './tracing.ts';
  * @param preconditions - Optional preconditions that must be met for the write to succeed.
  */
 export const writeEvents = (
-    events: Event[],
-    preconditions?: Precondition[],
+  events: Event[],
+  preconditions?: Precondition[],
 ): Promise<void> => {
-    return withSpan('writeEvents', async () => {
-        const eventSourcingDBClient = getEventSourcingDBClient();
+  return withSpan('writeEvents', async () => {
+    const eventSourcingDBClient = getEventSourcingDBClient();
 
-        const carrier: Record<string, string> = {};
-        propagation.inject(context.active(), carrier);
+    const carrier: Record<string, string> = {};
+    propagation.inject(context.active(), carrier);
 
-        const eventCandidates: EventCandidate[] = events.map((event) =>
-            nimbusEventToEventSourcingDBEventCandidate(
-                event,
-                carrier['traceparent'],
-                carrier['tracestate'],
-            )
-        );
+    const eventCandidates: EventCandidate[] = events.map((event) =>
+      nimbusEventToEventSourcingDBEventCandidate(
+        event,
+        carrier['traceparent'],
+        carrier['tracestate'],
+      )
+    );
 
-        await eventSourcingDBClient.writeEvents(
-            eventCandidates,
-            preconditions,
-        );
-    });
+    await eventSourcingDBClient.writeEvents(
+      eventCandidates,
+      preconditions,
+    );
+  });
 };

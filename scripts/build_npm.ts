@@ -1,7 +1,7 @@
 #!/usr/bin/env -S deno run -A
 
 /**
- * Builds an npm-compatible distribution for every Nimbus package using
+ * Builds an npm-compatible distribution for every EventFabric package using
  * `@deno/dnt` (Deno to Node Transform).
  *
  * Each package is emitted into `dist/npm/<pkg>/` with ESM output, type
@@ -15,9 +15,9 @@
  *     deno task build:npm 2.1.0          # override version for every package
  *     deno run -A scripts/build_npm.ts   # equivalent to the first form
  *
- * Packages are published under the `@nimbus-cqrs` scope on both JSR and
- * npm. Sibling cross-package imports (e.g. `@nimbus-cqrs/core` consumed by
- * `@nimbus-cqrs/eventsourcingdb`) are rewritten in the dnt output so the
+ * Packages are published under the `@eventfabric-cqrs` scope on both JSR and
+ * npm. Sibling cross-package imports (e.g. `@eventfabric-cqrs/core` consumed by
+ * `@eventfabric-cqrs/eventsourcingdb`) are rewritten in the dnt output so the
  * published npm package depends on its sibling npm twin instead of
  * inline-bundling the sibling source.
  */
@@ -31,7 +31,7 @@ import {
     resolve,
 } from 'jsr:@std/path@^1.0.9';
 
-const SCOPE = '@nimbus-cqrs';
+const SCOPE = '@eventfabric-cqrs';
 
 const repoRoot = resolve(dirname(fromFileUrl(import.meta.url)), '..');
 
@@ -50,7 +50,7 @@ interface PackageDef {
 }
 
 const SHARED_KEYWORDS = [
-    'nimbus',
+    'eventfabric',
     'cqrs',
     'event-sourcing',
     'event-driven',
@@ -66,7 +66,7 @@ const packages: PackageDef[] = [
         dir: 'core',
         name: `${SCOPE}/core`,
         description:
-            'Simplify Event-Driven Applications - Core building blocks of the Nimbus framework.',
+            'Simplify Event-Driven Applications - Core building blocks of the EventFabric framework.',
         keywords: [
             ...SHARED_KEYWORDS,
             'command',
@@ -78,7 +78,7 @@ const packages: PackageDef[] = [
         dir: 'utils',
         name: `${SCOPE}/utils`,
         description:
-            'Simplify Event-Driven Applications - Utility helpers shared across the Nimbus framework.',
+            'Simplify Event-Driven Applications - Utility helpers shared across the EventFabric framework.',
         keywords: [
             ...SHARED_KEYWORDS,
             'utils',
@@ -88,7 +88,7 @@ const packages: PackageDef[] = [
         dir: 'mongodb',
         name: `${SCOPE}/mongodb`,
         description:
-            'Simplify Event-Driven Applications - MongoDB integration for the Nimbus framework.',
+            'Simplify Event-Driven Applications - MongoDB integration for the EventFabric framework.',
         keywords: [
             ...SHARED_KEYWORDS,
             'mongodb',
@@ -99,7 +99,7 @@ const packages: PackageDef[] = [
         dir: 'hono',
         name: `${SCOPE}/hono`,
         description:
-            'Simplify Event-Driven Applications - Hono integration for the Nimbus framework.',
+            'Simplify Event-Driven Applications - Hono integration for the EventFabric framework.',
         keywords: [
             ...SHARED_KEYWORDS,
             'hono',
@@ -112,7 +112,7 @@ const packages: PackageDef[] = [
         dir: 'eventsourcingdb',
         name: `${SCOPE}/eventsourcingdb`,
         description:
-            'Simplify Event-Driven Applications - EventSourcingDB integration for the Nimbus framework.',
+            'Simplify Event-Driven Applications - EventSourcingDB integration for the EventFabric framework.',
         keywords: [
             ...SHARED_KEYWORDS,
             'eventsourcingdb',
@@ -184,8 +184,8 @@ async function* walkFiles(dir: string): AsyncGenerator<string> {
 
 /**
  * Rewrites every reference to a vendored Nimbus sibling package in the dnt
- * output (e.g. `../deps/jsr.io/@nimbus-cqrs/core/2.0.0/src/index.js`) back
- * to the bare npm specifier (`@nimbus-cqrs/core`) so the published package
+ * output (e.g. `../deps/jsr.io/@eventfabric-cqrs/core/2.0.0/src/index.js`) back
+ * to the bare npm specifier (`@eventfabric-cqrs/core`) so the published package
  * depends on its sibling instead of bundling a copy of it. Also deletes
  * the vendored copies once they are no longer referenced.
  */

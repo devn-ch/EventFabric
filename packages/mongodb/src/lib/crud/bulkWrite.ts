@@ -1,9 +1,9 @@
 import type {
-    AnyBulkWriteOperation,
-    BulkWriteOptions,
-    BulkWriteResult,
-    Collection,
-    Document,
+  AnyBulkWriteOperation,
+  BulkWriteOptions,
+  BulkWriteResult,
+  Collection,
+  Document,
 } from 'mongodb';
 import { handleMongoError } from '../handleMongoError.ts';
 import { withSpan } from '../tracing.ts';
@@ -12,16 +12,16 @@ import { withSpan } from '../tracing.ts';
  * Type to define the input for the bulkWrite function.
  */
 export type BulkWriteInput = {
-    collection: Collection<Document>;
-    operations: AnyBulkWriteOperation<Document>[];
-    options?: BulkWriteOptions;
+  collection: Collection<Document>;
+  operations: AnyBulkWriteOperation<Document>[];
+  options?: BulkWriteOptions;
 };
 
 /**
  * Type to define the bulkWrite function.
  */
 export type BulkWrite = (
-    input: BulkWriteInput,
+  input: BulkWriteInput,
 ) => Promise<BulkWriteResult>;
 
 /**
@@ -35,15 +35,15 @@ export type BulkWrite = (
  * @returns {Promise<BulkWriteResult>} The result of the bulk write operation.
  */
 export const bulkWrite: BulkWrite = ({
-    collection,
-    operations,
-    options,
+  collection,
+  operations,
+  options,
 }) => {
-    return withSpan('bulkWrite', collection, async () => {
-        try {
-            return await collection.bulkWrite(operations, options);
-        } catch (error) {
-            throw handleMongoError(error);
-        }
-    });
+  return withSpan('bulkWrite', collection, async () => {
+    try {
+      return await collection.bulkWrite(operations, options);
+    } catch (error) {
+      throw handleMongoError(error);
+    }
+  });
 };

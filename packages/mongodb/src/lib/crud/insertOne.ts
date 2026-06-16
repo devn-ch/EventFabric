@@ -1,9 +1,9 @@
 import type {
-    Collection,
-    Document,
-    InsertOneOptions,
-    InsertOneResult,
-    OptionalUnlessRequiredId,
+  Collection,
+  Document,
+  InsertOneOptions,
+  InsertOneResult,
+  OptionalUnlessRequiredId,
 } from 'mongodb';
 import { handleMongoError } from '../handleMongoError.ts';
 import { withSpan } from '../tracing.ts';
@@ -12,16 +12,16 @@ import { withSpan } from '../tracing.ts';
  * Type to define the input for the insertOne function.
  */
 export type InsertOneInput = {
-    collection: Collection<Document>;
-    document: OptionalUnlessRequiredId<Document>;
-    options?: InsertOneOptions;
+  collection: Collection<Document>;
+  document: OptionalUnlessRequiredId<Document>;
+  options?: InsertOneOptions;
 };
 
 /**
  * Type to define the insertOne function.
  */
 export type InsertOne = (
-    input: InsertOneInput,
+  input: InsertOneInput,
 ) => Promise<InsertOneResult<Document>>;
 
 /**
@@ -35,15 +35,15 @@ export type InsertOne = (
  * @returns {Promise<InsertOneResult<Document>} The result of the insert operation.
  */
 export const insertOne: InsertOne = ({
-    collection,
-    document,
-    options,
+  collection,
+  document,
+  options,
 }) => {
-    return withSpan('insertOne', collection, async () => {
-        try {
-            return await collection.insertOne(document, options);
-        } catch (error) {
-            throw handleMongoError(error);
-        }
-    });
+  return withSpan('insertOne', collection, async () => {
+    try {
+      return await collection.insertOne(document, options);
+    } catch (error) {
+      throw handleMongoError(error);
+    }
+  });
 };

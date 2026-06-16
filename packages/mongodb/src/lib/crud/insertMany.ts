@@ -1,9 +1,9 @@
 import type {
-    BulkWriteOptions,
-    Collection,
-    Document,
-    InsertManyResult,
-    OptionalUnlessRequiredId,
+  BulkWriteOptions,
+  Collection,
+  Document,
+  InsertManyResult,
+  OptionalUnlessRequiredId,
 } from 'mongodb';
 import { handleMongoError } from '../handleMongoError.ts';
 import { withSpan } from '../tracing.ts';
@@ -12,16 +12,16 @@ import { withSpan } from '../tracing.ts';
  * Type to define the input for the insertMany function.
  */
 export type InsertManyInput = {
-    collection: Collection<Document>;
-    documents: OptionalUnlessRequiredId<Document>[];
-    options?: BulkWriteOptions;
+  collection: Collection<Document>;
+  documents: OptionalUnlessRequiredId<Document>[];
+  options?: BulkWriteOptions;
 };
 
 /**
  * Type to define the insertMany function.
  */
 export type InsertMany = (
-    input: InsertManyInput,
+  input: InsertManyInput,
 ) => Promise<InsertManyResult<Document>>;
 
 /**
@@ -35,15 +35,15 @@ export type InsertMany = (
  * @returns {Promise<InsertManyResult<Document>} The result of the insert operation.
  */
 export const insertMany: InsertMany = ({
-    collection,
-    documents,
-    options,
+  collection,
+  documents,
+  options,
 }) => {
-    return withSpan('insertMany', collection, async () => {
-        try {
-            return await collection.insertMany(documents, options);
-        } catch (error) {
-            throw handleMongoError(error);
-        }
-    });
+  return withSpan('insertMany', collection, async () => {
+    try {
+      return await collection.insertMany(documents, options);
+    } catch (error) {
+      throw handleMongoError(error);
+    }
+  });
 };

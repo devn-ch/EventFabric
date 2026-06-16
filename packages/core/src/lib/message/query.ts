@@ -37,43 +37,43 @@ import { z } from 'zod';
  * };
  */
 export type Query<TData = unknown> = {
-    specversion: '1.0';
-    id: string;
-    correlationid: string;
-    time: string;
-    source: string;
-    type: string;
-    data: TData;
-    datacontenttype?: string;
-    dataschema?: string;
+  specversion: '1.0';
+  id: string;
+  correlationid: string;
+  time: string;
+  source: string;
+  type: string;
+  data: TData;
+  datacontenttype?: string;
+  dataschema?: string;
 };
 
 /**
  * Type alias for the query data field schema.
  */
 type QueryDataSchema = z.ZodUnion<
-    [
-        z.ZodRecord<z.ZodString, z.ZodUnknown>,
-        z.ZodString,
-        z.ZodNumber,
-        z.ZodArray<z.ZodUnknown>,
-        z.ZodBoolean,
-    ]
+  [
+    z.ZodRecord<z.ZodString, z.ZodUnknown>,
+    z.ZodString,
+    z.ZodNumber,
+    z.ZodArray<z.ZodUnknown>,
+    z.ZodBoolean,
+  ]
 >;
 
 /**
  * Type alias for the query schema shape.
  */
 export type QuerySchemaType = z.ZodObject<{
-    specversion: z.ZodLiteral<'1.0'>;
-    id: z.ZodString;
-    correlationid: z.ZodString;
-    time: z.ZodISODateTime;
-    source: z.ZodString;
-    type: z.ZodString;
-    data: QueryDataSchema;
-    datacontenttype: z.ZodOptional<z.ZodString>;
-    dataschema: z.ZodOptional<z.ZodURL>;
+  specversion: z.ZodLiteral<'1.0'>;
+  id: z.ZodString;
+  correlationid: z.ZodString;
+  time: z.ZodISODateTime;
+  source: z.ZodString;
+  type: z.ZodString;
+  data: QueryDataSchema;
+  datacontenttype: z.ZodOptional<z.ZodString>;
+  dataschema: z.ZodOptional<z.ZodURL>;
 }>;
 
 /**
@@ -85,21 +85,21 @@ export type QuerySchemaType = z.ZodObject<{
  * slow type issues see https://jsr.io/docs/about-slow-types for more details.
  */
 export const querySchema: QuerySchemaType = z.object({
-    specversion: z.literal('1.0'),
-    id: z.string(),
-    correlationid: z.string(),
-    time: z.iso.datetime(),
-    source: z.string(),
-    type: z.string(),
-    data: z.union([
-        z.record(z.string(), z.unknown()),
-        z.string(),
-        z.number(),
-        z.array(z.unknown()),
-        z.boolean(),
-    ]),
-    datacontenttype: z.string().optional(),
-    dataschema: z.url().optional(),
+  specversion: z.literal('1.0'),
+  id: z.string(),
+  correlationid: z.string(),
+  time: z.iso.datetime(),
+  source: z.string(),
+  type: z.string(),
+  data: z.union([
+    z.record(z.string(), z.unknown()),
+    z.string(),
+    z.number(),
+    z.array(z.unknown()),
+    z.boolean(),
+  ]),
+  datacontenttype: z.string().optional(),
+  dataschema: z.url().optional(),
 });
 
 /**
@@ -110,32 +110,32 @@ export const querySchema: QuerySchemaType = z.object({
  * `type` and `data` must match the narrower types of `TQuery`.
  */
 export type CreateQueryInput<TQuery extends Query = Query> =
-    & Partial<
-        Pick<
-            TQuery,
-            'id' | 'correlationid' | 'time' | 'datacontenttype' | 'dataschema'
-        >
+  & Partial<
+    Pick<
+      TQuery,
+      'id' | 'correlationid' | 'time' | 'datacontenttype' | 'dataschema'
     >
-    & Pick<TQuery, 'type' | 'source' | 'data'>;
+  >
+  & Pick<TQuery, 'type' | 'source' | 'data'>;
 
 /**
  * Creates a query based on input data with the convenience
  * to skip properties and use the defaults for the rest.
  */
 export const createQuery = <TQuery extends Query>(
-    input: CreateQueryInput<TQuery>,
+  input: CreateQueryInput<TQuery>,
 ): TQuery => {
-    const query = {
-        specversion: '1.0' as const,
-        id: input.id ?? ulid(),
-        correlationid: input.correlationid ?? ulid(),
-        time: input.time ?? new Date().toISOString(),
-        source: input.source,
-        type: input.type,
-        data: input.data,
-        datacontenttype: input.datacontenttype ?? 'application/json',
-        ...(input.dataschema && { dataschema: input.dataschema }),
-    };
+  const query = {
+    specversion: '1.0' as const,
+    id: input.id ?? ulid(),
+    correlationid: input.correlationid ?? ulid(),
+    time: input.time ?? new Date().toISOString(),
+    source: input.source,
+    type: input.type,
+    data: input.data,
+    datacontenttype: input.datacontenttype ?? 'application/json',
+    ...(input.dataschema && { dataschema: input.dataschema }),
+  };
 
-    return query as TQuery;
+  return query as TQuery;
 };

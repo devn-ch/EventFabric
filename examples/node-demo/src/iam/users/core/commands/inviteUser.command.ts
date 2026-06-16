@@ -1,9 +1,9 @@
-import { commandSchema, InvalidInputException } from '@nimbus-cqrs/core';
+import { commandSchema, InvalidInputException } from '@eventfabric-cqrs/core';
 import { ObjectId } from 'mongodb';
 import { z } from 'zod';
 import { UserState } from '../domain/user.ts';
 
-export const INVITE_USER_COMMAND_TYPE = 'at.overlap.nimbus.invite-user';
+export const INVITE_USER_COMMAND_TYPE = 'ch.devn.eventfabric.invite-user';
 
 export const inviteUserInputSchema = z.object({
     email: z.email(),

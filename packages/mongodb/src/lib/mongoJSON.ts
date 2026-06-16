@@ -1,4 +1,4 @@
-import { InvalidInputException } from '@nimbus-cqrs/core';
+import { InvalidInputException } from '@eventfabric-cqrs/core';
 import { ObjectId } from 'mongodb';
 
 /**
@@ -8,7 +8,7 @@ import { ObjectId } from 'mongodb';
  * @returns {string} The JSON string representation of the object.
  */
 const mongoJSONStringify = (object: Record<string, unknown>): string => {
-    return JSON.stringify(object);
+  return JSON.stringify(object);
 };
 
 /**
@@ -24,42 +24,42 @@ const mongoJSONStringify = (object: Record<string, unknown>): string => {
  * @throws {Error} - If the JSON string is invalid or contains a blacklisted operator
  */
 const mongoJSONParse = (
-    text: string,
-    operatorBlackList: string[] = ['$where'],
+  text: string,
+  operatorBlackList: string[] = ['$where'],
 ): any => {
-    for (const operator of operatorBlackList) {
-        if (text.includes(operator)) {
-            throw new Error(`Operator '${operator}' is not allowed`);
-        }
+  for (const operator of operatorBlackList) {
+    if (text.includes(operator)) {
+      throw new Error(`Operator '${operator}' is not allowed`);
+    }
+  }
+
+  const reviver = (_key: string, value: unknown) => {
+    if (typeof value !== 'string') {
+      return value;
     }
 
-    const reviver = (_key: string, value: unknown) => {
-        if (typeof value !== 'string') {
-            return value;
-        }
-
-        if (value.startsWith('objectId::')) {
-            return new ObjectId(value.replace('objectId::', ''));
-        } else if (value.startsWith('date::')) {
-            return new Date(value.replace('date::', ''));
-        } else if (value.startsWith('int::')) {
-            return Number.parseInt(value.replace('int::', ''));
-        } else if (value.startsWith('double::')) {
-            return Number.parseFloat(value.replace('double::', ''));
-        } else {
-            return value;
-        }
-    };
-
-    try {
-        return JSON.parse(text, reviver);
-    } catch (error) {
-        if (error instanceof Error) {
-            throw new InvalidInputException().fromError(error);
-        } else {
-            throw new InvalidInputException('MongoJSON parse error');
-        }
+    if (value.startsWith('objectId::')) {
+      return new ObjectId(value.replace('objectId::', ''));
+    } else if (value.startsWith('date::')) {
+      return new Date(value.replace('date::', ''));
+    } else if (value.startsWith('int::')) {
+      return Number.parseInt(value.replace('int::', ''));
+    } else if (value.startsWith('double::')) {
+      return Number.parseFloat(value.replace('double::', ''));
+    } else {
+      return value;
     }
+  };
+
+  try {
+    return JSON.parse(text, reviver);
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new InvalidInputException().fromError(error);
+    } else {
+      throw new InvalidInputException('MongoJSON parse error');
+    }
+  }
 };
 
 /**
@@ -94,6 +94,6 @@ const mongoJSONParse = (
  * ```
  */
 export const MongoJSON = {
-    parse: mongoJSONParse,
-    stringify: mongoJSONStringify,
+  parse: mongoJSONParse,
+  stringify: mongoJSONStringify,
 };

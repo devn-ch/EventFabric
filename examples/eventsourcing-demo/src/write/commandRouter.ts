@@ -1,4 +1,4 @@
-import { getLogger, setupRouter } from '@nimbus-cqrs/core';
+import { getLogger, setupRouter } from '@eventfabric-cqrs/core';
 import { registerUserCommands } from './iam/users/shell/commands/registerUserCommands.ts';
 
 export const initCommandRouter = () => {

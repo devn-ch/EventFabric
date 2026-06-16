@@ -1,32 +1,32 @@
 import {
-    type Attributes,
-    context,
-    type Span,
-    SpanKind,
-    SpanStatusCode,
-    trace,
+  type Attributes,
+  context,
+  type Span,
+  SpanKind,
+  SpanStatusCode,
+  trace,
 } from '@opentelemetry/api';
 
 /**
  * Options for configuring a span created by withSpan.
  */
 export type WithSpanOptions = {
-    /**
-     * The name of the span. This will be displayed in your tracing UI.
-     */
-    name: string;
-    /**
-     * The name of the tracer. Defaults to "nimbus".
-     */
-    tracerName?: string;
-    /**
-     * The kind of span. Defaults to SpanKind.INTERNAL.
-     */
-    kind?: SpanKind;
-    /**
-     * Initial attributes to set on the span.
-     */
-    attributes?: Attributes;
+  /**
+   * The name of the span. This will be displayed in your tracing UI.
+   */
+  name: string;
+  /**
+   * The name of the tracer. Defaults to "EventFabric".
+   */
+  tracerName?: string;
+  /**
+   * The kind of span. Defaults to SpanKind.INTERNAL.
+   */
+  kind?: SpanKind;
+  /**
+   * Initial attributes to set on the span.
+   */
+  attributes?: Attributes;
 };
 
 /**
@@ -40,7 +40,7 @@ export type WithSpanOptions = {
  *
  * @example
  * ```ts
- * import { withSpan } from '@nimbus-cqrs/core';
+ * import { withSpan } from '@eventfabric-cqrs/core';
  *
  * const fetchUser = withSpan(
  *     {
@@ -73,56 +73,56 @@ export type WithSpanOptions = {
  * ```
  */
 export const withSpan = <TArgs extends unknown[], TReturn>(
-    options: WithSpanOptions,
-    fn: (...args: [...TArgs, Span]) => TReturn,
+  options: WithSpanOptions,
+  fn: (...args: [...TArgs, Span]) => TReturn,
 ): (...args: TArgs) => TReturn => {
-    const tracerName = options.tracerName ?? 'nimbus';
-    const tracer = trace.getTracer(tracerName);
+  const tracerName = options.tracerName ?? 'eventFabric';
+  const tracer = trace.getTracer(tracerName);
 
-    return (...args: TArgs): TReturn => {
-        const parentContext = context.active();
+  return (...args: TArgs): TReturn => {
+    const parentContext = context.active();
 
-        return tracer.startActiveSpan(
-            options.name,
-            {
-                kind: options.kind ?? SpanKind.INTERNAL,
-                attributes: options.attributes,
-            },
-            parentContext,
-            (span) => {
-                try {
-                    const result = fn(...args, span);
+    return tracer.startActiveSpan(
+      options.name,
+      {
+        kind: options.kind ?? SpanKind.INTERNAL,
+        attributes: options.attributes,
+      },
+      parentContext,
+      (span) => {
+        try {
+          const result = fn(...args, span);
 
-                    // Handle promises
-                    if (result instanceof Promise) {
-                        return result
-                            .then((value) => {
-                                span.end();
-                                return value;
-                            })
-                            .catch((err) => {
-                                span.setStatus({
-                                    code: SpanStatusCode.ERROR,
-                                    message: (err as Error).message,
-                                });
-                                span.recordException(err as Error);
-                                span.end();
-                                throw err;
-                            }) as TReturn;
-                    }
+          // Handle promises
+          if (result instanceof Promise) {
+            return result
+              .then((value) => {
+                span.end();
+                return value;
+              })
+              .catch((err) => {
+                span.setStatus({
+                  code: SpanStatusCode.ERROR,
+                  message: (err as Error).message,
+                });
+                span.recordException(err as Error);
+                span.end();
+                throw err;
+              }) as TReturn;
+          }
 
-                    span.end();
-                    return result;
-                } catch (err) {
-                    span.setStatus({
-                        code: SpanStatusCode.ERROR,
-                        message: (err as Error).message,
-                    });
-                    span.recordException(err as Error);
-                    span.end();
-                    throw err;
-                }
-            },
-        ) as TReturn;
-    };
+          span.end();
+          return result;
+        } catch (err) {
+          span.setStatus({
+            code: SpanStatusCode.ERROR,
+            message: (err as Error).message,
+          });
+          span.recordException(err as Error);
+          span.end();
+          throw err;
+        }
+      },
+    ) as TReturn;
+  };
 };

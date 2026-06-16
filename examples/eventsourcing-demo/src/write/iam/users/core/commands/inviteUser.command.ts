@@ -1,4 +1,4 @@
-import { commandSchema, createEvent, Exception } from '@nimbus-cqrs/core';
+import { commandSchema, createEvent, Exception } from '@eventfabric-cqrs/core';
 import { z } from 'zod';
 import { UserState } from '../domain/user.state.ts';
 import {

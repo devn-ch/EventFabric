@@ -6,9 +6,9 @@ import { ulid } from '@std/ulid';
  * Checked in order of priority.
  */
 const CORRELATION_ID_HEADERS = [
-    'x-correlation-id',
-    'x-request-id',
-    'request-id',
+  'x-correlation-id',
+  'x-request-id',
+  'request-id',
 ] as const;
 
 /**
@@ -20,16 +20,16 @@ export const CORRELATION_ID_KEY = 'correlationId' as const;
  * Options for configuring the correlation ID middleware.
  */
 export type CorrelationIdOptions = {
-    /**
-     * Add the correlation ID to the response headers.
-     * Defaults to true.
-     */
-    addToResponseHeaders?: boolean;
-    /**
-     * The header name to use when adding to response headers.
-     * Defaults to "x-correlation-id".
-     */
-    responseHeaderName?: string;
+  /**
+   * Add the correlation ID to the response headers.
+   * Defaults to true.
+   */
+  addToResponseHeaders?: boolean;
+  /**
+   * The header name to use when adding to response headers.
+   * Defaults to "x-correlation-id".
+   */
+  responseHeaderName?: string;
 };
 
 /**
@@ -59,39 +59,39 @@ export type CorrelationIdOptions = {
  * ```
  */
 export const correlationId = (
-    options?: CorrelationIdOptions,
+  options?: CorrelationIdOptions,
 ): MiddlewareHandler => {
-    const addToResponseHeaders = options?.addToResponseHeaders ?? true;
-    const responseHeaderName = options?.responseHeaderName ??
-        'x-correlation-id';
+  const addToResponseHeaders = options?.addToResponseHeaders ?? true;
+  const responseHeaderName = options?.responseHeaderName ??
+    'x-correlation-id';
 
-    return async (c, next) => {
-        let id: string | undefined;
+  return async (c, next) => {
+    let id: string | undefined;
 
-        // Check incoming headers for existing correlation ID
-        for (const header of CORRELATION_ID_HEADERS) {
-            const value = c.req.header(header);
-            if (value) {
-                id = value;
-                break;
-            }
-        }
+    // Check incoming headers for existing correlation ID
+    for (const header of CORRELATION_ID_HEADERS) {
+      const value = c.req.header(header);
+      if (value) {
+        id = value;
+        break;
+      }
+    }
 
-        // Generate new ID if not found
-        if (!id) {
-            id = ulid();
-        }
+    // Generate new ID if not found
+    if (!id) {
+      id = ulid();
+    }
 
-        // Store in context
-        c.set(CORRELATION_ID_KEY, id);
+    // Store in context
+    c.set(CORRELATION_ID_KEY, id);
 
-        // Optionally add to response headers
-        if (addToResponseHeaders) {
-            c.header(responseHeaderName, id);
-        }
+    // Optionally add to response headers
+    if (addToResponseHeaders) {
+      c.header(responseHeaderName, id);
+    }
 
-        await next();
-    };
+    await next();
+  };
 };
 
 /**
@@ -101,7 +101,7 @@ export const correlationId = (
  * @returns The correlation ID or undefined if not set
  */
 export const getCorrelationId = (c: {
-    get: (key: typeof CORRELATION_ID_KEY) => string | undefined;
+  get: (key: typeof CORRELATION_ID_KEY) => string | undefined;
 }): string => {
-    return c.get(CORRELATION_ID_KEY) ?? '';
+  return c.get(CORRELATION_ID_KEY) ?? '';
 };

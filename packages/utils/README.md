@@ -1,4 +1,6 @@
-# Nimbus Utils
+# EventFabric Utils
+
+A small collection of utility helpers used across the EventFabric framework — currently a single helper, `getEnv`, for reading required environment variables in a fail-fast way.
 
 <img
     src="https://raw.githubusercontent.com/devn-ch/EventFabric/next/media/EventFabric.webp"
@@ -6,33 +8,31 @@
     alt="Event Fabric"
 />
 
-A small collection of utility helpers used across the Nimbus framework — currently a single helper, `getEnv`, for reading required environment variables in a fail-fast way.
-
-Refer to the [Nimbus main repository](https://github.com/overlap-dev/Nimbus) or the [Nimbus documentation](https://nimbus.overlap.at) for more information about the Nimbus framework.
+Refer to the [EventFabric main repository](https://github.com/devn-ch/EventFabric/) or the [EventFabric documentation](https://devn-ch.github.io/EventFabric/) for more information about the EventFabric framework.
 
 ## Install
 
 ```bash
 # Deno
-deno add npm:@nimbus-cqrs/utils
+deno add npm:@eventfabric-cqrs/utils
 
 # NPM
-npm install @nimbus-cqrs/utils
+npm install @eventfabric-cqrs/utils
 
 # Bun
-bun add @nimbus-cqrs/utils
+bun add @eventfabric-cqrs/utils
 ```
 
 # Examples
 
-For detailed documentation, please refer to the [Nimbus documentation](https://nimbus.overlap.at).
+For detailed documentation, please refer to the [EventFabric documentation](https://devn-ch.github.io/EventFabric/).
 
 ## getEnv
 
-`getEnv` reads a list of environment variables from `process.env` and returns them as a plain object. If any of the requested variables are missing it logs the missing names through the Nimbus logger and throws a `GenericException`, so misconfiguration fails loudly at startup instead of leaking through as `undefined` later.
+`getEnv` reads a list of environment variables from `process.env` and returns them as a plain object. If any of the requested variables are missing it logs the missing names through the EventFabric logger and throws a `GenericException`, so misconfiguration fails loudly at startup instead of leaking through as `undefined` later.
 
 ```typescript
-import { getEnv } from "@nimbus-cqrs/utils";
+import { getEnv } from "@eventfabric-cqrs/utils";
 
 const env = getEnv({
     variables: ["MONGO_URI", "MONGO_DB_NAME"],
@@ -57,8 +57,8 @@ If, for example, `MONGO_DB_NAME` is not set, the call throws a `GenericException
 A typical pattern is to call `getEnv` once at application startup, before any subsystem that needs those values is initialized:
 
 ```typescript
-import { getEnv } from "@nimbus-cqrs/utils";
-import { MongoConnectionManager } from "@nimbus-cqrs/mongodb";
+import { getEnv } from "@eventfabric-cqrs/utils";
+import { MongoConnectionManager } from "@eventfabric-cqrs/mongodb";
 
 const env = getEnv({
     variables: ["MONGO_URI", "MONGO_DB_NAME"],
