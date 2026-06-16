@@ -16,6 +16,6 @@ import type { Query } from './query.ts';
  * @template TData - The type of the data.
  */
 export type Message<TData = unknown> =
-    | Command<TData>
-    | Event<TData>
-    | Query<TData>;
+  | Command<TData>
+  | Event<TData>
+  | Query<TData>;

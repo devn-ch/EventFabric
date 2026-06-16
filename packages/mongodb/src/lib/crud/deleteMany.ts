@@ -1,9 +1,9 @@
 import type {
-    Collection,
-    DeleteOptions,
-    DeleteResult,
-    Document,
-    Filter,
+  Collection,
+  DeleteOptions,
+  DeleteResult,
+  Document,
+  Filter,
 } from 'mongodb';
 import { handleMongoError } from '../handleMongoError.ts';
 import { withSpan } from '../tracing.ts';
@@ -12,16 +12,16 @@ import { withSpan } from '../tracing.ts';
  * Type to define the input for the deleteMany function.
  */
 export type DeleteManyInput = {
-    collection: Collection<Document>;
-    filter: Filter<Document>;
-    options?: DeleteOptions;
+  collection: Collection<Document>;
+  filter: Filter<Document>;
+  options?: DeleteOptions;
 };
 
 /**
  * Type to define the deleteMany function.
  */
 export type DeleteMany = (
-    input: DeleteManyInput,
+  input: DeleteManyInput,
 ) => Promise<DeleteResult>;
 
 /**
@@ -35,15 +35,15 @@ export type DeleteMany = (
  * @returns {Promise<DeleteResult>} The result of the delete operation.
  */
 export const deleteMany: DeleteMany = ({
-    collection,
-    filter,
-    options,
+  collection,
+  filter,
+  options,
 }) => {
-    return withSpan('deleteMany', collection, async () => {
-        try {
-            return await collection.deleteMany(filter, options);
-        } catch (error) {
-            throw handleMongoError(error);
-        }
-    });
+  return withSpan('deleteMany', collection, async () => {
+    try {
+      return await collection.deleteMany(filter, options);
+    } catch (error) {
+      throw handleMongoError(error);
+    }
+  });
 };

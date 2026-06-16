@@ -1,11 +1,11 @@
 import { GenericException } from '@eventfabric-cqrs/core';
 import type {
-    Collection,
-    Document,
-    Filter,
-    FindOptions,
-    Sort,
-    WithId,
+  Collection,
+  Document,
+  Filter,
+  FindOptions,
+  Sort,
+  WithId,
 } from 'mongodb';
 import type { ZodType } from 'zod';
 import { handleMongoError } from '../handleMongoError.ts';
@@ -15,22 +15,22 @@ import { withSpan } from '../tracing.ts';
  * Type to define the input for the find function.
  */
 export type FindInput<TData> = {
-    collection: Collection<Document>;
-    filter: Filter<Document>;
-    limit?: number;
-    skip?: number;
-    sort?: Sort;
-    project?: Document;
-    mapDocument: (document: Document) => TData;
-    outputType: ZodType;
-    options?: FindOptions;
+  collection: Collection<Document>;
+  filter: Filter<Document>;
+  limit?: number;
+  skip?: number;
+  sort?: Sort;
+  project?: Document;
+  mapDocument: (document: Document) => TData;
+  outputType: ZodType;
+  options?: FindOptions;
 };
 
 /**
  * Type to define the find function.
  */
 export type Find = <TData>(
-    input: FindInput<TData>,
+  input: FindInput<TData>,
 ) => Promise<TData[]>;
 
 /**
@@ -51,53 +51,51 @@ export type Find = <TData>(
  * @returns {Promise<TData[]>} The found documents.
  */
 export const find: Find = <TData>({
-    collection,
-    filter,
-    limit,
-    skip,
-    sort,
-    project,
-    mapDocument,
-    outputType,
-    options,
+  collection,
+  filter,
+  limit,
+  skip,
+  sort,
+  project,
+  mapDocument,
+  outputType,
+  options,
 }: FindInput<TData>) => {
-    return withSpan('find', collection, async () => {
-        let res: WithId<Document>[] = [];
+  return withSpan('find', collection, async () => {
+    let res: WithId<Document>[] = [];
 
-        try {
-            const findRes = collection.find(filter, options);
+    try {
+      const findRes = collection.find(filter, options);
 
-            if (limit !== undefined) {
-                findRes.limit(limit);
-            }
+      if (limit !== undefined) {
+        findRes.limit(limit);
+      }
 
-            if (skip !== undefined) {
-                findRes.skip(skip);
-            }
+      if (skip !== undefined) {
+        findRes.skip(skip);
+      }
 
-            if (sort !== undefined) {
-                findRes.sort(sort);
-            }
+      if (sort !== undefined) {
+        findRes.sort(sort);
+      }
 
-            if (project !== undefined) {
-                findRes.project(project);
-            }
+      if (project !== undefined) {
+        findRes.project(project);
+      }
 
-            res = await findRes.toArray();
-        } catch (error) {
-            throw handleMongoError(error);
-        }
+      res = await findRes.toArray();
+    } catch (error) {
+      throw handleMongoError(error);
+    }
 
-        try {
-            return res.map((item) =>
-                outputType.parse(mapDocument(item))
-            ) as TData[];
-        } catch (error) {
-            const exception = error instanceof Error
-                ? new GenericException().fromError(error)
-                : new GenericException();
+    try {
+      return res.map((item) => outputType.parse(mapDocument(item))) as TData[];
+    } catch (error) {
+      const exception = error instanceof Error
+        ? new GenericException().fromError(error)
+        : new GenericException();
 
-            throw exception;
-        }
-    });
+      throw exception;
+    }
+  });
 };

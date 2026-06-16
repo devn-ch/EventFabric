@@ -43,45 +43,45 @@ import { z } from 'zod';
  * };
  */
 export type Event<TData = unknown> = {
-    specversion: '1.0';
-    id: string;
-    correlationid: string;
-    time: string;
-    source: string;
-    type: string;
-    subject: string;
-    data: TData;
-    datacontenttype?: string;
-    dataschema?: string;
+  specversion: '1.0';
+  id: string;
+  correlationid: string;
+  time: string;
+  source: string;
+  type: string;
+  subject: string;
+  data: TData;
+  datacontenttype?: string;
+  dataschema?: string;
 };
 
 /**
  * Type alias for the event data field schema.
  */
 type EventDataSchema = z.ZodUnion<
-    [
-        z.ZodRecord<z.ZodString, z.ZodUnknown>,
-        z.ZodString,
-        z.ZodNumber,
-        z.ZodArray<z.ZodUnknown>,
-        z.ZodBoolean,
-    ]
+  [
+    z.ZodRecord<z.ZodString, z.ZodUnknown>,
+    z.ZodString,
+    z.ZodNumber,
+    z.ZodArray<z.ZodUnknown>,
+    z.ZodBoolean,
+  ]
 >;
 
 /**
  * Type alias for the event schema shape.
  */
 export type EventSchemaType = z.ZodObject<{
-    specversion: z.ZodLiteral<'1.0'>;
-    id: z.ZodString;
-    correlationid: z.ZodString;
-    time: z.ZodISODateTime;
-    source: z.ZodString;
-    type: z.ZodString;
-    subject: z.ZodString;
-    data: EventDataSchema;
-    datacontenttype: z.ZodOptional<z.ZodString>;
-    dataschema: z.ZodOptional<z.ZodURL>;
+  specversion: z.ZodLiteral<'1.0'>;
+  id: z.ZodString;
+  correlationid: z.ZodString;
+  time: z.ZodISODateTime;
+  source: z.ZodString;
+  type: z.ZodString;
+  subject: z.ZodString;
+  data: EventDataSchema;
+  datacontenttype: z.ZodOptional<z.ZodString>;
+  dataschema: z.ZodOptional<z.ZodURL>;
 }>;
 
 /**
@@ -93,22 +93,22 @@ export type EventSchemaType = z.ZodObject<{
  * slow type issues see https://jsr.io/docs/about-slow-types for more details.
  */
 export const eventSchema: EventSchemaType = z.object({
-    specversion: z.literal('1.0'),
-    id: z.string(),
-    correlationid: z.string(),
-    time: z.iso.datetime(),
-    source: z.string(),
-    type: z.string(),
-    subject: z.string(),
-    data: z.union([
-        z.record(z.string(), z.unknown()),
-        z.string(),
-        z.number(),
-        z.array(z.unknown()),
-        z.boolean(),
-    ]),
-    datacontenttype: z.string().optional(),
-    dataschema: z.url().optional(),
+  specversion: z.literal('1.0'),
+  id: z.string(),
+  correlationid: z.string(),
+  time: z.iso.datetime(),
+  source: z.string(),
+  type: z.string(),
+  subject: z.string(),
+  data: z.union([
+    z.record(z.string(), z.unknown()),
+    z.string(),
+    z.number(),
+    z.array(z.unknown()),
+    z.boolean(),
+  ]),
+  datacontenttype: z.string().optional(),
+  dataschema: z.url().optional(),
 });
 
 /**
@@ -119,33 +119,33 @@ export const eventSchema: EventSchemaType = z.object({
  * `type` and `data` must match the narrower types of `TEvent`.
  */
 export type CreateEventInput<TEvent extends Event = Event> =
-    & Partial<
-        Pick<
-            TEvent,
-            'id' | 'correlationid' | 'time' | 'datacontenttype' | 'dataschema'
-        >
+  & Partial<
+    Pick<
+      TEvent,
+      'id' | 'correlationid' | 'time' | 'datacontenttype' | 'dataschema'
     >
-    & Pick<TEvent, 'type' | 'source' | 'subject' | 'data'>;
+  >
+  & Pick<TEvent, 'type' | 'source' | 'subject' | 'data'>;
 
 /**
  * Creates an event based on input data with the convenience
  * to skip properties and use the defaults for the rest.
  */
 export const createEvent = <TEvent extends Event>(
-    input: CreateEventInput<TEvent>,
+  input: CreateEventInput<TEvent>,
 ): TEvent => {
-    const event = {
-        specversion: '1.0' as const,
-        id: input.id ?? ulid(),
-        correlationid: input.correlationid ?? ulid(),
-        time: input.time ?? new Date().toISOString(),
-        source: input.source,
-        type: input.type,
-        subject: input.subject,
-        data: input.data,
-        datacontenttype: input.datacontenttype ?? 'application/json',
-        ...(input.dataschema && { dataschema: input.dataschema }),
-    };
+  const event = {
+    specversion: '1.0' as const,
+    id: input.id ?? ulid(),
+    correlationid: input.correlationid ?? ulid(),
+    time: input.time ?? new Date().toISOString(),
+    source: input.source,
+    type: input.type,
+    subject: input.subject,
+    data: input.data,
+    datacontenttype: input.datacontenttype ?? 'application/json',
+    ...(input.dataschema && { dataschema: input.dataschema }),
+  };
 
-    return event as TEvent;
+  return event as TEvent;
 };

@@ -40,45 +40,45 @@ import { z } from 'zod';
  * };
  */
 export type Command<TData = unknown> = {
-    specversion: '1.0';
-    id: string;
-    correlationid: string;
-    time: string;
-    source: string;
-    type: string;
-    subject?: string;
-    data: TData;
-    datacontenttype?: string;
-    dataschema?: string;
+  specversion: '1.0';
+  id: string;
+  correlationid: string;
+  time: string;
+  source: string;
+  type: string;
+  subject?: string;
+  data: TData;
+  datacontenttype?: string;
+  dataschema?: string;
 };
 
 /**
  * Type alias for the command data field schema.
  */
 type CommandDataSchema = z.ZodUnion<
-    [
-        z.ZodRecord<z.ZodString, z.ZodUnknown>,
-        z.ZodString,
-        z.ZodNumber,
-        z.ZodArray<z.ZodUnknown>,
-        z.ZodBoolean,
-    ]
+  [
+    z.ZodRecord<z.ZodString, z.ZodUnknown>,
+    z.ZodString,
+    z.ZodNumber,
+    z.ZodArray<z.ZodUnknown>,
+    z.ZodBoolean,
+  ]
 >;
 
 /**
  * Type alias for the command schema shape.
  */
 export type CommandSchemaType = z.ZodObject<{
-    specversion: z.ZodLiteral<'1.0'>;
-    id: z.ZodString;
-    correlationid: z.ZodString;
-    time: z.ZodISODateTime;
-    source: z.ZodString;
-    type: z.ZodString;
-    subject: z.ZodOptional<z.ZodString>;
-    data: CommandDataSchema;
-    datacontenttype: z.ZodOptional<z.ZodString>;
-    dataschema: z.ZodOptional<z.ZodURL>;
+  specversion: z.ZodLiteral<'1.0'>;
+  id: z.ZodString;
+  correlationid: z.ZodString;
+  time: z.ZodISODateTime;
+  source: z.ZodString;
+  type: z.ZodString;
+  subject: z.ZodOptional<z.ZodString>;
+  data: CommandDataSchema;
+  datacontenttype: z.ZodOptional<z.ZodString>;
+  dataschema: z.ZodOptional<z.ZodURL>;
 }>;
 
 /**
@@ -90,22 +90,22 @@ export type CommandSchemaType = z.ZodObject<{
  * slow type issues see https://jsr.io/docs/about-slow-types for more details.
  */
 export const commandSchema: CommandSchemaType = z.object({
-    specversion: z.literal('1.0'),
-    id: z.string(),
-    correlationid: z.string(),
-    time: z.iso.datetime(),
-    source: z.string(),
-    type: z.string(),
-    subject: z.string().optional(),
-    data: z.union([
-        z.record(z.string(), z.unknown()),
-        z.string(),
-        z.number(),
-        z.array(z.unknown()),
-        z.boolean(),
-    ]),
-    datacontenttype: z.string().optional(),
-    dataschema: z.url().optional(),
+  specversion: z.literal('1.0'),
+  id: z.string(),
+  correlationid: z.string(),
+  time: z.iso.datetime(),
+  source: z.string(),
+  type: z.string(),
+  subject: z.string().optional(),
+  data: z.union([
+    z.record(z.string(), z.unknown()),
+    z.string(),
+    z.number(),
+    z.array(z.unknown()),
+    z.boolean(),
+  ]),
+  datacontenttype: z.string().optional(),
+  dataschema: z.url().optional(),
 });
 
 /**
@@ -116,38 +116,38 @@ export const commandSchema: CommandSchemaType = z.object({
  * `type` and `data` must match the narrower types of `TCommand`.
  */
 export type CreateCommandInput<TCommand extends Command = Command> =
-    & Partial<
-        Pick<
-            TCommand,
-            | 'id'
-            | 'correlationid'
-            | 'time'
-            | 'subject'
-            | 'datacontenttype'
-            | 'dataschema'
-        >
+  & Partial<
+    Pick<
+      TCommand,
+      | 'id'
+      | 'correlationid'
+      | 'time'
+      | 'subject'
+      | 'datacontenttype'
+      | 'dataschema'
     >
-    & Pick<TCommand, 'type' | 'source' | 'data'>;
+  >
+  & Pick<TCommand, 'type' | 'source' | 'data'>;
 
 /**
  * Creates a command based on input data with the convenience
  * to skip properties and use the defaults for the rest.
  */
 export const createCommand = <TCommand extends Command>(
-    input: CreateCommandInput<TCommand>,
+  input: CreateCommandInput<TCommand>,
 ): TCommand => {
-    const command = {
-        specversion: '1.0' as const,
-        id: input.id ?? ulid(),
-        correlationid: input.correlationid ?? ulid(),
-        time: input.time ?? new Date().toISOString(),
-        source: input.source,
-        type: input.type,
-        ...(input.subject && { subject: input.subject }),
-        data: input.data,
-        datacontenttype: input.datacontenttype ?? 'application/json',
-        ...(input.dataschema && { dataschema: input.dataschema }),
-    };
+  const command = {
+    specversion: '1.0' as const,
+    id: input.id ?? ulid(),
+    correlationid: input.correlationid ?? ulid(),
+    time: input.time ?? new Date().toISOString(),
+    source: input.source,
+    type: input.type,
+    ...(input.subject && { subject: input.subject }),
+    data: input.data,
+    datacontenttype: input.datacontenttype ?? 'application/json',
+    ...(input.dataschema && { dataschema: input.dataschema }),
+  };
 
-    return command as TCommand;
+  return command as TCommand;
 };

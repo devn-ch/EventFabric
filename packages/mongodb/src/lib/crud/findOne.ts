@@ -8,17 +8,17 @@ import { withSpan } from '../tracing.ts';
  * Type to define the input for the findOne function.
  */
 export type FindOneInput<TData> = {
-    collection: Collection<Document>;
-    filter: Filter<Document>;
-    mapDocument: (document: Document) => TData;
-    outputType: ZodType;
+  collection: Collection<Document>;
+  filter: Filter<Document>;
+  mapDocument: (document: Document) => TData;
+  outputType: ZodType;
 };
 
 /**
  * Type to define the findOne function.
  */
 export type FindOne = <TData>(
-    input: FindOneInput<TData>,
+  input: FindOneInput<TData>,
 ) => Promise<TData>;
 
 /**
@@ -34,32 +34,32 @@ export type FindOne = <TData>(
  * @returns {Promise<TData>} The found document.
  */
 export const findOne: FindOne = <TData>({
-    collection,
-    filter,
-    mapDocument,
-    outputType,
+  collection,
+  filter,
+  mapDocument,
+  outputType,
 }: FindOneInput<TData>) => {
-    return withSpan('findOne', collection, async () => {
-        let res: WithId<Document> | null = null;
+  return withSpan('findOne', collection, async () => {
+    let res: WithId<Document> | null = null;
 
-        try {
-            res = await collection.findOne(filter);
-        } catch (error) {
-            throw handleMongoError(error);
-        }
+    try {
+      res = await collection.findOne(filter);
+    } catch (error) {
+      throw handleMongoError(error);
+    }
 
-        if (!res) {
-            throw new NotFoundException('Document not found');
-        }
+    if (!res) {
+      throw new NotFoundException('Document not found');
+    }
 
-        try {
-            return outputType.parse(mapDocument(res)) as TData;
-        } catch (error) {
-            const exception = error instanceof Error
-                ? new GenericException().fromError(error)
-                : new GenericException();
+    try {
+      return outputType.parse(mapDocument(res)) as TData;
+    } catch (error) {
+      const exception = error instanceof Error
+        ? new GenericException().fromError(error)
+        : new GenericException();
 
-            throw exception;
-        }
-    });
+      throw exception;
+    }
+  });
 };

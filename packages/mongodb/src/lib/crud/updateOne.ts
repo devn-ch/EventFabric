@@ -1,10 +1,10 @@
 import type {
-    Collection,
-    Document,
-    Filter,
-    UpdateFilter,
-    UpdateOptions,
-    UpdateResult,
+  Collection,
+  Document,
+  Filter,
+  UpdateFilter,
+  UpdateOptions,
+  UpdateResult,
 } from 'mongodb';
 import { handleMongoError } from '../handleMongoError.ts';
 import { withSpan } from '../tracing.ts';
@@ -13,17 +13,17 @@ import { withSpan } from '../tracing.ts';
  * Type to define the input for the updateOne function.
  */
 export type UpdateOneInput = {
-    collection: Collection<Document>;
-    filter: Filter<Document>;
-    update: UpdateFilter<Document> | Document[];
-    options?: UpdateOptions;
+  collection: Collection<Document>;
+  filter: Filter<Document>;
+  update: UpdateFilter<Document> | Document[];
+  options?: UpdateOptions;
 };
 
 /**
  * Type to define the updateOne function.
  */
 export type UpdateOne = (
-    input: UpdateOneInput,
+  input: UpdateOneInput,
 ) => Promise<UpdateResult<Document>>;
 
 /**
@@ -38,16 +38,16 @@ export type UpdateOne = (
  * @returns {Promise<UpdateResult<Document>} The result of the update operation.
  */
 export const updateOne: UpdateOne = ({
-    collection,
-    filter,
-    update,
-    options,
+  collection,
+  filter,
+  update,
+  options,
 }) => {
-    return withSpan('updateOne', collection, async () => {
-        try {
-            return await collection.updateOne(filter, update, options);
-        } catch (error) {
-            throw handleMongoError(error);
-        }
-    });
+  return withSpan('updateOne', collection, async () => {
+    try {
+      return await collection.updateOne(filter, update, options);
+    } catch (error) {
+      throw handleMongoError(error);
+    }
+  });
 };

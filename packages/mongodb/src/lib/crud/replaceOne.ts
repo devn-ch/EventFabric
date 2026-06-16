@@ -1,10 +1,10 @@
 import type {
-    Collection,
-    Document,
-    Filter,
-    ReplaceOptions,
-    UpdateResult,
-    WithoutId,
+  Collection,
+  Document,
+  Filter,
+  ReplaceOptions,
+  UpdateResult,
+  WithoutId,
 } from 'mongodb';
 import { handleMongoError } from '../handleMongoError.ts';
 import { withSpan } from '../tracing.ts';
@@ -13,17 +13,17 @@ import { withSpan } from '../tracing.ts';
  * Type to define the input for the replaceOne function.
  */
 export type ReplaceOneInput = {
-    collection: Collection<Document>;
-    filter: Filter<Document>;
-    replacement: WithoutId<Document>;
-    options?: ReplaceOptions;
+  collection: Collection<Document>;
+  filter: Filter<Document>;
+  replacement: WithoutId<Document>;
+  options?: ReplaceOptions;
 };
 
 /**
  * Type to define the replaceOne function.
  */
 export type ReplaceOne = (
-    input: ReplaceOneInput,
+  input: ReplaceOneInput,
 ) => Promise<Document | UpdateResult<Document>>;
 
 /**
@@ -38,16 +38,16 @@ export type ReplaceOne = (
  * @returns {Promise<Document | UpdateResult<Document>} The result of the replace operation.
  */
 export const replaceOne: ReplaceOne = ({
-    collection,
-    filter,
-    replacement,
-    options,
+  collection,
+  filter,
+  replacement,
+  options,
 }) => {
-    return withSpan('replaceOne', collection, async () => {
-        try {
-            return await collection.replaceOne(filter, replacement, options);
-        } catch (error) {
-            throw handleMongoError(error);
-        }
-    });
+  return withSpan('replaceOne', collection, async () => {
+    try {
+      return await collection.replaceOne(filter, replacement, options);
+    } catch (error) {
+      throw handleMongoError(error);
+    }
+  });
 };

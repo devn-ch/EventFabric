@@ -1,10 +1,10 @@
 import type {
-    Collection,
-    Document,
-    Filter,
-    UpdateFilter,
-    UpdateOptions,
-    UpdateResult,
+  Collection,
+  Document,
+  Filter,
+  UpdateFilter,
+  UpdateOptions,
+  UpdateResult,
 } from 'mongodb';
 import { handleMongoError } from '../handleMongoError.ts';
 import { withSpan } from '../tracing.ts';
@@ -13,17 +13,17 @@ import { withSpan } from '../tracing.ts';
  * Type to define the input for the updateMany function.
  */
 export type UpdateManyInput = {
-    collection: Collection<Document>;
-    filter: Filter<Document>;
-    update: UpdateFilter<Document> | Document[];
-    options?: UpdateOptions;
+  collection: Collection<Document>;
+  filter: Filter<Document>;
+  update: UpdateFilter<Document> | Document[];
+  options?: UpdateOptions;
 };
 
 /**
  * Type to define the updateMany function.
  */
 export type UpdateMany = (
-    input: UpdateManyInput,
+  input: UpdateManyInput,
 ) => Promise<UpdateResult<Document>>;
 
 /**
@@ -38,16 +38,16 @@ export type UpdateMany = (
  * @returns {Promise<UpdateResult<Document>} The result of the update operation.
  */
 export const updateMany: UpdateMany = ({
-    collection,
-    filter,
-    update,
-    options,
+  collection,
+  filter,
+  update,
+  options,
 }) => {
-    return withSpan('updateMany', collection, async () => {
-        try {
-            return await collection.updateMany(filter, update, options);
-        } catch (error) {
-            throw handleMongoError(error);
-        }
-    });
+  return withSpan('updateMany', collection, async () => {
+    try {
+      return await collection.updateMany(filter, update, options);
+    } catch (error) {
+      throw handleMongoError(error);
+    }
+  });
 };

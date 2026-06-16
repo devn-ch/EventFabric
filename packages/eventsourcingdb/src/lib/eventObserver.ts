@@ -4,28 +4,28 @@ import { getEventSourcingDBClient } from './client.ts';
 import { type TraceContext, withSpan } from './tracing.ts';
 
 type Bound = {
-    id: string;
-    type: 'inclusive' | 'exclusive';
+  id: string;
+  type: 'inclusive' | 'exclusive';
 };
 
 type ObserveFromLatestEvent = {
-    subject: string;
-    type: string;
-    ifEventIsMissing: 'read-everything' | 'wait-for-event';
+  subject: string;
+  type: string;
+  ifEventIsMissing: 'read-everything' | 'wait-for-event';
 };
 
 export type RetryOptions = {
-    /**
-     * The maximum number of retry attempts before giving up.
-     * Defaults to 3.
-     */
-    maxRetries: number;
-    /**
-     * The initial delay in milliseconds before the first retry.
-     * Subsequent retries will use exponential backoff with jitter.
-     * Defaults to 3000ms.
-     */
-    initialRetryDelayMs: number;
+  /**
+   * The maximum number of retry attempts before giving up.
+   * Defaults to 3.
+   */
+  maxRetries: number;
+  /**
+   * The initial delay in milliseconds before the first retry.
+   * Subsequent retries will use exponential backoff with jitter.
+   * Defaults to 3000ms.
+   */
+  initialRetryDelayMs: number;
 };
 
 /**
@@ -35,45 +35,45 @@ export type RetryOptions = {
  * See https://docs.eventsourcingdb.io/getting-started/observing-events for more information.
  */
 export type EventObserver = {
-    /**
-     * The subject of the events to observe.
-     */
-    subject: string;
-    /**
-     * Whether to observe events recursively.
-     * Defaults to false.
-     */
-    recursive?: boolean;
-    /**
-     * The lower bound of the events to observe.
-     * Defaults to undefined.
-     */
-    lowerBound?: Bound;
-    /**
-     * The from latest event to observe.
-     * Defaults to undefined.
-     */
-    fromLatestEvent?: ObserveFromLatestEvent;
-    /**
-     * The event handler which will be called when an event is observed.
-     *
-     * @param event - The EventSourcingDB event that was observed.
-     * @returns A promise that resolves when the event has been handled.
-     */
-    eventHandler: (event: EventSourcingDBEvent) => Promise<void> | void;
-    /**
-     * Options for retry behavior when the connection fails.
-     * Uses exponential backoff with jitter between retries.
-     * Defaults to { maxRetries: 3, initialRetryDelayMs: 3000 }.
-     */
-    retryOptions?: RetryOptions;
+  /**
+   * The subject of the events to observe.
+   */
+  subject: string;
+  /**
+   * Whether to observe events recursively.
+   * Defaults to false.
+   */
+  recursive?: boolean;
+  /**
+   * The lower bound of the events to observe.
+   * Defaults to undefined.
+   */
+  lowerBound?: Bound;
+  /**
+   * The from latest event to observe.
+   * Defaults to undefined.
+   */
+  fromLatestEvent?: ObserveFromLatestEvent;
+  /**
+   * The event handler which will be called when an event is observed.
+   *
+   * @param event - The EventSourcingDB event that was observed.
+   * @returns A promise that resolves when the event has been handled.
+   */
+  eventHandler: (event: EventSourcingDBEvent) => Promise<void> | void;
+  /**
+   * Options for retry behavior when the connection fails.
+   * Uses exponential backoff with jitter between retries.
+   * Defaults to { maxRetries: 3, initialRetryDelayMs: 3000 }.
+   */
+  retryOptions?: RetryOptions;
 };
 
 /**
  * Returns a promise that resolves after the given number of milliseconds.
  */
 const delay = (ms: number): Promise<void> =>
-    new Promise((resolve) => setTimeout(resolve, ms));
+  new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Calculates an exponential backoff delay with jitter for a given
@@ -86,15 +86,15 @@ const delay = (ms: number): Promise<void> =>
  * @returns The backoff delay in milliseconds.
  */
 export const calculateBackoffDelay = (
-    initialDelayMs: number,
-    attempt: number,
+  initialDelayMs: number,
+  attempt: number,
 ): number => {
-    const baseDelay = initialDelayMs * Math.pow(2, attempt);
+  const baseDelay = initialDelayMs * Math.pow(2, attempt);
 
-    // Add jitter: random value between 0 and 30% of the base delay
-    const jitter = Math.random() * baseDelay * 0.3;
+  // Add jitter: random value between 0 and 30% of the base delay
+  const jitter = Math.random() * baseDelay * 0.3;
 
-    return Math.floor(baseDelay + jitter);
+  return Math.floor(baseDelay + jitter);
 };
 
 /**
@@ -108,16 +108,16 @@ export const calculateBackoffDelay = (
  * @param data - Additional context logged alongside the message.
  */
 const logObserverConnection = (
-    subject: string,
-    retryCount: number,
-    data: Record<string, unknown>,
+  subject: string,
+  retryCount: number,
+  data: Record<string, unknown>,
 ): void => {
-    const retryLabel = retryCount === 1 ? 'retry' : 'retries';
-    const message = retryCount > 0
-        ? `Reconnected event observer for subject "${subject}" after ${retryCount} ${retryLabel}`
-        : `Observing events for subject "${subject}"`;
+  const retryLabel = retryCount === 1 ? 'retry' : 'retries';
+  const message = retryCount > 0
+    ? `Reconnected event observer for subject "${subject}" after ${retryCount} ${retryLabel}`
+    : `Observing events for subject "${subject}"`;
 
-    getLogger().info({ category: 'Nimbus', message, data });
+  getLogger().info({ category: 'Nimbus', message, data });
 };
 
 /**
@@ -136,37 +136,37 @@ const logObserverConnection = (
  *   are exhausted.
  */
 const handleObserverError = async (
-    error: unknown,
-    subject: string,
-    retryCount: number,
-    maxRetries: number,
-    initialRetryDelayMs: number,
+  error: unknown,
+  subject: string,
+  retryCount: number,
+  maxRetries: number,
+  initialRetryDelayMs: number,
 ): Promise<boolean> => {
-    if (retryCount > maxRetries) {
-        getLogger().critical({
-            category: 'Nimbus',
-            message:
-                `Failed to observe events for subject "${subject}" after ${maxRetries} ${
-                    maxRetries === 1 ? 'retry' : 'retries'
-                }.`,
-        });
-        return false;
-    }
-
-    const backoffDelay = calculateBackoffDelay(
-        initialRetryDelayMs,
-        retryCount - 1,
-    );
-
-    getLogger().error({
-        category: 'Nimbus',
-        message:
-            `Error observing events for subject "${subject}" (retry ${retryCount}/${maxRetries}), retrying in ${backoffDelay}ms`,
-        error: error as Error,
+  if (retryCount > maxRetries) {
+    getLogger().critical({
+      category: 'Nimbus',
+      message:
+        `Failed to observe events for subject "${subject}" after ${maxRetries} ${
+          maxRetries === 1 ? 'retry' : 'retries'
+        }.`,
     });
+    return false;
+  }
 
-    await delay(backoffDelay);
-    return true;
+  const backoffDelay = calculateBackoffDelay(
+    initialRetryDelayMs,
+    retryCount - 1,
+  );
+
+  getLogger().error({
+    category: 'Nimbus',
+    message:
+      `Error observing events for subject "${subject}" (retry ${retryCount}/${maxRetries}), retrying in ${backoffDelay}ms`,
+    error: error as Error,
+  });
+
+  await delay(backoffDelay);
+  return true;
 };
 
 /**
@@ -188,85 +188,83 @@ const handleObserverError = async (
  * @param eventObserver - The event observer configuration.
  */
 const observeWithRetry = async (
-    eventObserver: EventObserver,
+  eventObserver: EventObserver,
 ): Promise<void> => {
-    const eventSourcingDBClient = getEventSourcingDBClient();
+  const eventSourcingDBClient = getEventSourcingDBClient();
 
-    const maxRetries = eventObserver.retryOptions?.maxRetries ?? 3;
-    const initialRetryDelayMs =
-        eventObserver.retryOptions?.initialRetryDelayMs ?? 3000;
+  const maxRetries = eventObserver.retryOptions?.maxRetries ?? 3;
+  const initialRetryDelayMs = eventObserver.retryOptions?.initialRetryDelayMs ??
+    3000;
 
-    let retryCount = 0;
-    let lastProcessedEventId: string | undefined;
+  let retryCount = 0;
+  let lastProcessedEventId: string | undefined;
 
-    while (true) {
-        try {
-            // Once we have a concrete position, use it as lower bound and
-            // drop fromLatestEvent; otherwise fall back to the original options.
-            const lowerBound: Bound | undefined = lastProcessedEventId
-                ? { id: lastProcessedEventId, type: 'exclusive' }
-                : eventObserver.lowerBound;
-            const fromLatestEvent: ObserveFromLatestEvent | undefined =
-                lastProcessedEventId
-                    ? undefined
-                    : eventObserver.fromLatestEvent;
+  while (true) {
+    try {
+      // Once we have a concrete position, use it as lower bound and
+      // drop fromLatestEvent; otherwise fall back to the original options.
+      const lowerBound: Bound | undefined = lastProcessedEventId
+        ? { id: lastProcessedEventId, type: 'exclusive' }
+        : eventObserver.lowerBound;
+      const fromLatestEvent: ObserveFromLatestEvent | undefined =
+        lastProcessedEventId ? undefined : eventObserver.fromLatestEvent;
 
-            logObserverConnection(eventObserver.subject, retryCount, {
-                recursive: eventObserver.recursive ?? false,
-                lowerBound,
-                fromLatestEvent,
-            });
+      logObserverConnection(eventObserver.subject, retryCount, {
+        recursive: eventObserver.recursive ?? false,
+        lowerBound,
+        fromLatestEvent,
+      });
 
-            for await (
-                const event of eventSourcingDBClient.observeEvents(
-                    eventObserver.subject,
-                    {
-                        recursive: eventObserver.recursive ?? false,
-                        ...(lowerBound ? { lowerBound } : {}),
-                        ...(fromLatestEvent ? { fromLatestEvent } : {}),
-                    },
-                )
-            ) {
-                // Reset the retry count as soon as we successfully receive an event
-                retryCount = 0;
+      for await (
+        const event of eventSourcingDBClient.observeEvents(
+          eventObserver.subject,
+          {
+            recursive: eventObserver.recursive ?? false,
+            ...(lowerBound ? { lowerBound } : {}),
+            ...(fromLatestEvent ? { fromLatestEvent } : {}),
+          },
+        )
+      ) {
+        // Reset the retry count as soon as we successfully receive an event
+        retryCount = 0;
 
-                const traceContext: TraceContext | undefined = event.traceparent
-                    ? {
-                        traceparent: event.traceparent,
-                        tracestate: event.tracestate,
-                    }
-                    : undefined;
+        const traceContext: TraceContext | undefined = event.traceparent
+          ? {
+            traceparent: event.traceparent,
+            tracestate: event.tracestate,
+          }
+          : undefined;
 
-                await withSpan(
-                    'observeEvent',
-                    async () => {
-                        await eventObserver.eventHandler(event);
-                    },
-                    traceContext,
-                );
+        await withSpan(
+          'observeEvent',
+          async () => {
+            await eventObserver.eventHandler(event);
+          },
+          traceContext,
+        );
 
-                // Track last processed position so retries resume from here
-                lastProcessedEventId = event.id;
-            }
+        // Track last processed position so retries resume from here
+        lastProcessedEventId = event.id;
+      }
 
-            // If the loop completes normally (stream ended), we're done
-            return;
-        } catch (error) {
-            retryCount++;
+      // If the loop completes normally (stream ended), we're done
+      return;
+    } catch (error) {
+      retryCount++;
 
-            const shouldRetry = await handleObserverError(
-                error,
-                eventObserver.subject,
-                retryCount,
-                maxRetries,
-                initialRetryDelayMs,
-            );
+      const shouldRetry = await handleObserverError(
+        error,
+        eventObserver.subject,
+        retryCount,
+        maxRetries,
+        initialRetryDelayMs,
+      );
 
-            if (!shouldRetry) {
-                return;
-            }
-        }
+      if (!shouldRetry) {
+        return;
+      }
     }
+  }
 };
 
 /**
@@ -278,5 +276,5 @@ const observeWithRetry = async (
  * @param eventObserver - The event observer configuration.
  */
 export const initEventObserver = (eventObserver: EventObserver): void => {
-    observeWithRetry(eventObserver);
+  observeWithRetry(eventObserver);
 };

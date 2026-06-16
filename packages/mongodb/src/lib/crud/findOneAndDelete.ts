@@ -1,10 +1,10 @@
 import { GenericException, NotFoundException } from '@eventfabric-cqrs/core';
 import type {
-    Collection,
-    Document,
-    Filter,
-    FindOneAndDeleteOptions,
-    WithId,
+  Collection,
+  Document,
+  Filter,
+  FindOneAndDeleteOptions,
+  WithId,
 } from 'mongodb';
 import type { ZodType } from 'zod';
 import { handleMongoError } from '../handleMongoError.ts';
@@ -14,18 +14,18 @@ import { withSpan } from '../tracing.ts';
  * Type to define the input for the findOneAndDelete function.
  */
 export type FindOneAndDeleteInput<TData> = {
-    collection: Collection<Document>;
-    filter: Filter<Document>;
-    mapDocument: (document: Document) => TData;
-    outputType: ZodType;
-    options?: FindOneAndDeleteOptions;
+  collection: Collection<Document>;
+  filter: Filter<Document>;
+  mapDocument: (document: Document) => TData;
+  outputType: ZodType;
+  options?: FindOneAndDeleteOptions;
 };
 
 /**
  * Type to define the findOneAndDelete function.
  */
 export type FindOneAndDelete = <TData>(
-    input: FindOneAndDeleteInput<TData>,
+  input: FindOneAndDeleteInput<TData>,
 ) => Promise<TData>;
 
 /**
@@ -42,37 +42,37 @@ export type FindOneAndDelete = <TData>(
  * @returns {Promise<TData>} The found and deleted document.
  */
 export const findOneAndDelete: FindOneAndDelete = <TData>({
-    collection,
-    filter,
-    mapDocument,
-    outputType,
-    options,
+  collection,
+  filter,
+  mapDocument,
+  outputType,
+  options,
 }: FindOneAndDeleteInput<TData>) => {
-    return withSpan('findOneAndDelete', collection, async () => {
-        let res: WithId<Document> | null = null;
+  return withSpan('findOneAndDelete', collection, async () => {
+    let res: WithId<Document> | null = null;
 
-        try {
-            if (options) {
-                res = await collection.findOneAndDelete(filter, options);
-            } else {
-                res = await collection.findOneAndDelete(filter);
-            }
-        } catch (error) {
-            throw handleMongoError(error);
-        }
+    try {
+      if (options) {
+        res = await collection.findOneAndDelete(filter, options);
+      } else {
+        res = await collection.findOneAndDelete(filter);
+      }
+    } catch (error) {
+      throw handleMongoError(error);
+    }
 
-        if (!res) {
-            throw new NotFoundException('Document not found');
-        }
+    if (!res) {
+      throw new NotFoundException('Document not found');
+    }
 
-        try {
-            return outputType.parse(mapDocument(res)) as TData;
-        } catch (error) {
-            const exception = error instanceof Error
-                ? new GenericException().fromError(error)
-                : new GenericException();
+    try {
+      return outputType.parse(mapDocument(res)) as TData;
+    } catch (error) {
+      const exception = error instanceof Error
+        ? new GenericException().fromError(error)
+        : new GenericException();
 
-            throw exception;
-        }
-    });
+      throw exception;
+    }
+  });
 };

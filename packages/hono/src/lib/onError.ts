@@ -19,44 +19,44 @@ import type { HTTPResponseError } from 'hono/types';
  * ```
  */
 export const handleError = (
-    error: Error | HTTPResponseError,
-    c: Context,
+  error: Error | HTTPResponseError,
+  c: Context,
 ): Response => {
-    let statusCode = 500;
-    let response: Record<string, any> = {
-        error: 'INTERNAL_SERVER_ERROR',
+  let statusCode = 500;
+  let response: Record<string, any> = {
+    error: 'INTERNAL_SERVER_ERROR',
+  };
+
+  const isNimbusException = error instanceof Exception;
+
+  if (isNimbusException) {
+    statusCode = error.statusCode ?? 500;
+    response = {
+      error: error.name,
+      message: error.message,
+      ...(error.details && { details: error.details }),
     };
 
-    const isNimbusException = error instanceof Exception;
-
-    if (isNimbusException) {
-        statusCode = error.statusCode ?? 500;
-        response = {
-            error: error.name,
-            message: error.message,
-            ...(error.details && { details: error.details }),
-        };
-
-        if (statusCode >= 500) {
-            getLogger().error({
-                category: 'Nimbus',
-                message: error.message,
-                error,
-            });
-        } else {
-            getLogger().debug({
-                category: 'Nimbus',
-                message: error.message,
-                error,
-            });
-        }
+    if (statusCode >= 500) {
+      getLogger().error({
+        category: 'Nimbus',
+        message: error.message,
+        error,
+      });
     } else {
-        getLogger().critical({
-            category: 'Nimbus',
-            message: 'An unhandled error occurred',
-            error,
-        });
+      getLogger().debug({
+        category: 'Nimbus',
+        message: error.message,
+        error,
+      });
     }
+  } else {
+    getLogger().critical({
+      category: 'Nimbus',
+      message: 'An unhandled error occurred',
+      error,
+    });
+  }
 
-    return c.json(response, statusCode as any);
+  return c.json(response, statusCode as any);
 };

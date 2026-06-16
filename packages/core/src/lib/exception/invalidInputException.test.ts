@@ -2,66 +2,66 @@ import { assertEquals, assertInstanceOf } from '@std/assert';
 import { InvalidInputException } from './invalidInputException.ts';
 
 Deno.test('InvalidInputException without constructor input', () => {
-    const exception = new InvalidInputException();
+  const exception = new InvalidInputException();
 
-    assertInstanceOf(exception, InvalidInputException);
-    assertEquals(exception.name, 'INVALID_INPUT');
-    assertEquals(exception.message, 'Invalid input');
-    assertEquals(exception.statusCode, 400);
-    assertEquals(typeof exception.details, 'undefined');
-    assertEquals(typeof exception.stack, 'string');
+  assertInstanceOf(exception, InvalidInputException);
+  assertEquals(exception.name, 'INVALID_INPUT');
+  assertEquals(exception.message, 'Invalid input');
+  assertEquals(exception.statusCode, 400);
+  assertEquals(typeof exception.details, 'undefined');
+  assertEquals(typeof exception.stack, 'string');
 });
 
 Deno.test('InvalidInputException with constructor input', () => {
-    const message = 'My custom message';
-    const details = {
-        foo: 'bar',
-    };
+  const message = 'My custom message';
+  const details = {
+    foo: 'bar',
+  };
 
-    const exception = new InvalidInputException(
-        message,
-        details,
-    );
+  const exception = new InvalidInputException(
+    message,
+    details,
+  );
 
-    assertInstanceOf(exception, InvalidInputException);
-    assertEquals(exception.name, 'INVALID_INPUT');
-    assertEquals(exception.message, message);
-    assertEquals(exception.statusCode, 400);
-    assertEquals(exception.details, details);
-    assertEquals(typeof exception.stack, 'string');
+  assertInstanceOf(exception, InvalidInputException);
+  assertEquals(exception.name, 'INVALID_INPUT');
+  assertEquals(exception.message, message);
+  assertEquals(exception.statusCode, 400);
+  assertEquals(exception.details, details);
+  assertEquals(typeof exception.stack, 'string');
 });
 
 Deno.test('InvalidInputException from error without constructor input', () => {
-    const nativeError = new Error('Something unexpected happened!');
+  const nativeError = new Error('Something unexpected happened!');
 
-    const exception = new InvalidInputException().fromError(
-        nativeError,
-    );
+  const exception = new InvalidInputException().fromError(
+    nativeError,
+  );
 
-    assertInstanceOf(exception, InvalidInputException);
-    assertEquals(exception.name, 'INVALID_INPUT');
-    assertEquals(exception.message, nativeError.message);
-    assertEquals(exception.statusCode, 400);
-    assertEquals(typeof exception.details, 'undefined');
-    assertEquals(exception.stack, nativeError.stack);
+  assertInstanceOf(exception, InvalidInputException);
+  assertEquals(exception.name, 'INVALID_INPUT');
+  assertEquals(exception.message, nativeError.message);
+  assertEquals(exception.statusCode, 400);
+  assertEquals(typeof exception.details, 'undefined');
+  assertEquals(exception.stack, nativeError.stack);
 });
 
 Deno.test('InvalidInputException from error with constructor input', () => {
-    const nativeError = new Error('Something unexpected happened!');
-    const message = 'My custom message';
-    const details = {
-        foo: 'bar',
-    };
+  const nativeError = new Error('Something unexpected happened!');
+  const message = 'My custom message';
+  const details = {
+    foo: 'bar',
+  };
 
-    const exception = new InvalidInputException(
-        message,
-        details,
-    ).fromError(nativeError);
+  const exception = new InvalidInputException(
+    message,
+    details,
+  ).fromError(nativeError);
 
-    assertInstanceOf(exception, InvalidInputException);
-    assertEquals(exception.name, 'INVALID_INPUT');
-    assertEquals(exception.message, nativeError.message);
-    assertEquals(exception.statusCode, 400);
-    assertEquals(exception.details, details);
-    assertEquals(exception.stack, nativeError.stack);
+  assertInstanceOf(exception, InvalidInputException);
+  assertEquals(exception.name, 'INVALID_INPUT');
+  assertEquals(exception.message, nativeError.message);
+  assertEquals(exception.statusCode, 400);
+  assertEquals(exception.details, details);
+  assertEquals(exception.stack, nativeError.stack);
 });

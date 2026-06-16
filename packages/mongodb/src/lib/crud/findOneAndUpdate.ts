@@ -1,11 +1,11 @@
 import { GenericException, NotFoundException } from '@eventfabric-cqrs/core';
 import type {
-    Collection,
-    Document,
-    Filter,
-    FindOneAndUpdateOptions,
-    UpdateFilter,
-    WithId,
+  Collection,
+  Document,
+  Filter,
+  FindOneAndUpdateOptions,
+  UpdateFilter,
+  WithId,
 } from 'mongodb';
 import type { ZodType } from 'zod';
 import { handleMongoError } from '../handleMongoError.ts';
@@ -15,19 +15,19 @@ import { withSpan } from '../tracing.ts';
  * Type to define the input for the findOneAndUpdate function.
  */
 export type FindOneAndUpdateInput<TData> = {
-    collection: Collection<Document>;
-    filter: Filter<Document>;
-    update: UpdateFilter<Document>;
-    mapDocument: (document: Document) => TData;
-    outputType: ZodType;
-    options?: FindOneAndUpdateOptions;
+  collection: Collection<Document>;
+  filter: Filter<Document>;
+  update: UpdateFilter<Document>;
+  mapDocument: (document: Document) => TData;
+  outputType: ZodType;
+  options?: FindOneAndUpdateOptions;
 };
 
 /**
  * Type to define the findOneAndUpdate function.
  */
 export type FindOneAndUpdate = <TData>(
-    input: FindOneAndUpdateInput<TData>,
+  input: FindOneAndUpdateInput<TData>,
 ) => Promise<TData>;
 
 /**
@@ -45,42 +45,42 @@ export type FindOneAndUpdate = <TData>(
  * @returns {Promise<TData>} The found and updated document.
  */
 export const findOneAndUpdate: FindOneAndUpdate = <TData>({
-    collection,
-    filter,
-    update,
-    mapDocument,
-    outputType,
-    options,
+  collection,
+  filter,
+  update,
+  mapDocument,
+  outputType,
+  options,
 }: FindOneAndUpdateInput<TData>) => {
-    return withSpan('findOneAndUpdate', collection, async () => {
-        let res: WithId<Document> | null = null;
+  return withSpan('findOneAndUpdate', collection, async () => {
+    let res: WithId<Document> | null = null;
 
-        try {
-            if (options) {
-                res = await collection.findOneAndUpdate(
-                    filter,
-                    update,
-                    options,
-                );
-            } else {
-                res = await collection.findOneAndUpdate(filter, update);
-            }
-        } catch (error) {
-            throw handleMongoError(error);
-        }
+    try {
+      if (options) {
+        res = await collection.findOneAndUpdate(
+          filter,
+          update,
+          options,
+        );
+      } else {
+        res = await collection.findOneAndUpdate(filter, update);
+      }
+    } catch (error) {
+      throw handleMongoError(error);
+    }
 
-        if (!res) {
-            throw new NotFoundException('Document not found');
-        }
+    if (!res) {
+      throw new NotFoundException('Document not found');
+    }
 
-        try {
-            return outputType.parse(mapDocument(res)) as TData;
-        } catch (error) {
-            const exception = error instanceof Error
-                ? new GenericException().fromError(error)
-                : new GenericException();
+    try {
+      return outputType.parse(mapDocument(res)) as TData;
+    } catch (error) {
+      const exception = error instanceof Error
+        ? new GenericException().fromError(error)
+        : new GenericException();
 
-            throw exception;
-        }
-    });
+      throw exception;
+    }
+  });
 };

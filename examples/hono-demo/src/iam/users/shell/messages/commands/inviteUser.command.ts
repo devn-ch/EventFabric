@@ -1,4 +1,8 @@
-import { createEvent, getEventBus, NotFoundException } from '@eventfabric-cqrs/core';
+import {
+    createEvent,
+    getEventBus,
+    NotFoundException,
+} from '@eventfabric-cqrs/core';
 import {
     inviteUser,
     InviteUserCommand,
