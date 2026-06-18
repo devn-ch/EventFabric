@@ -1,0 +1,88 @@
+---
+title: Prerequisites
+description: Prerequisites for using EventFabric.
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+This is a part of the <a href="/EventFabric/guides/get-started">Get started</a> guide.
+
+
+- [git](https://git-scm.com/) code version control to clone this project from [github.com](https://github.com/devn-ch/EventFabric.git)
+
+<Tabs>
+  <TabItem value="debian" label="debian">
+    Install on linux (debian, ubuntu ...)
+    ```sh
+    sudo apt update && sudo apt install git
+    ```
+  </TabItem>
+
+  <TabItem value="brew" label="brew">
+    Install with homebrew
+    ```sh
+    brew update &&& brew install git
+    ```
+  </TabItem>
+</Tabs>
+
+- [fnm](https://github.com/Schniz/fnm) a NodeJS version manager (recommended)
+
+Install fnm:
+```sh
+curl -fsSL https://fnm.vercel.app/install | bash
+```
+
+Install the latest LTS nodejs version (or your preferred version):
+```sh
+fnm install --lts
+```
+
+Switch to the LTS version:
+```sh
+fnm use lts/latest
+```
+
+Set as the default (Optional):
+```sh
+fnm default lts-latest
+```
+
+Verify the installation:
+```sh
+node -v
+```
+
+
+Use regular Node.js or an alternative runtime:
+
+<Tabs>
+  <TabItem value="pnpm" label="pnpm">
+  [Node.js](https://nodejs.org/) with [pnpm](https://pnpm.io/) as a package manager (100% Node.js)
+    ```sh
+    npm i -g pnpm
+    ```
+  </TabItem>
+  
+  <TabItem value="deno" label="deno">
+  [Deno](https://deno.com/) JavaScript runtime (security by design)
+    ```sh
+    npm i -g deno
+    ```
+  </TabItem>
+
+  <TabItem value="bun" label="bun">
+  [Bun](https://bun.com/) JavaScript runtime (aims Node.js compatiblility but not 100% if you use `bun` features)
+    ```sh
+    npm i -g bun
+    ```
+  </TabItem>
+
+  <TabItem value="yarn" label="yarn">
+  [Node.js](https://nodejs.org/) with [yarn](https://yarnpkg.com/) as a fast package manager (100% Node.js)
+    ```sh
+    npm i -g yarn
+    ```
+  </TabItem>
+</Tabs>
+
+- [Docker / OrbStack](https://orbstack.dev/) to run the examples quick (optional)
