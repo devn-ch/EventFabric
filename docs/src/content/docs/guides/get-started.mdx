@@ -5,97 +5,16 @@ description: >-
   Install @nimbus-cqrs packages from npm or JSR for Deno, Node, or Bun; core is
   required, other packages are optional by need.
 ---
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { LinkCard, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
 
 To get started with EventFabric you need to install the core package and other relevant EventFabric packages based on your needs.
 
-All packages live under the `@nimbus-cqrs` scope.
+All packages live under the `@eventfabric-cqrs` scope.
 
 * npm: [@eventfabric-cqrs/core](https://www.npmjs.com/package/@eventfabric-cqrs/core) (and the rest of the [@eventfabric-cqrs](https://www.npmjs.com/org/eventfabric-cqrs) scope)
 * JSR: [@eventfabric-cqrs/core](https://jsr.io/@eventfabric-cqrs/core) (and the rest of the [@eventfabric-cqrs](https://jsr.io/@eventfabric-cqrs) scope)
 
-## Prerequisites
-
-- [git](https://git-scm.com/) code version control to clone this project from [github.com](https://github.com/devn-ch/EventFabric.git)
-
-<Tabs>
-  <TabItem value="debian" label="debian">
-    Install on linux (debian, ubuntu ...)
-    ```sh
-    sudo apt update && sudo apt install git
-    ```
-  </TabItem>
-
-  <TabItem value="brew" label="brew">
-    Install with homebrew
-    ```sh
-    brew update &&& brew install git
-    ```
-  </TabItem>
-</Tabs>
-
-- [fnm](https://github.com/Schniz/fnm) a NodeJS version manager (recommended)
-
-Install fnm:
-```sh
-curl -fsSL https://fnm.vercel.app/install | bash
-```
-
-Install the latest LTS nodejs version (or your preferred version):
-```sh
-fnm install --lts
-```
-
-Switch to the LTS version:
-```sh
-fnm use lts/latest
-```
-
-Set as the default (Optional):
-```sh
-fnm default lts-latest
-```
-
-Verify the installation:
-```sh
-node -v
-```
-
-
-Use regular Node.js or an alternative runtime:
-
-<Tabs>
-  <TabItem value="pnpm" label="pnpm">
-  [Node.js](https://nodejs.org/) with [pnpm](https://pnpm.io/) as a package manager (100% Node.js)
-    ```sh
-    npm i -g pnpm
-    ```
-  </TabItem>
-  
-  <TabItem value="deno" label="deno">
-  [Deno](https://deno.com/) JavaScript runtime (security by design)
-    ```sh
-    npm i -g deno
-    ```
-  </TabItem>
-
-  <TabItem value="bun" label="bun">
-  [Bun](https://bun.com/) JavaScript runtime (aims Node.js compatiblility but not 100% if you use `bun` features)
-    ```sh
-    npm i -g bun
-    ```
-  </TabItem>
-
-  <TabItem value="yarn" label="yarn">
-  [Node.js](https://nodejs.org/) with [yarn](https://yarnpkg.com/) as a fast package manager (100% Node.js)
-    ```sh
-    npm i -g yarn
-    ```
-  </TabItem>
-</Tabs>
-
-- [Docker / OrbStack](https://orbstack.dev/) to run the examples quick (optional)
-
+<LinkCard title="Prerequisites" href="/EventFabric/guides/install/prerequisites" description="Prerequisites to install EventFabric." />
 
 ## Installation
 
@@ -132,56 +51,73 @@ Depending on your package manager or runtime you can install EventFabric with th
 
 <Tabs>
   <TabItem value="node-demo" label="node-demo">
+<Steps>
 
-  Clone the EventFabric repository:
-  ```sh
-  git clone https://github.com/devn-ch/EventFabric.git
-  ```
+1. Clone the EventFabric repository:
 
-  Switch to the `node-demo` directory:
-  ```sh
-  cd examples/node-demo
-  ```
-  
-  Copy the `.env.example` template for local development (use environment variables in production)
-  ```sh
-  cp .env.example .env
-  ```
-  
-  Start the [ferretdb](https://github.com/FerretDB/FerretDB) container as an Open Source licensed [MongoDB](https://www.mongodb.com/) alternative based on [postgresql](https://www.postgresql.org/)
-  ```sh
-  docker compose up -d
-  ```
+    ```sh
+    git clone https://github.com/devn-ch/EventFabric.git
+    ```
 
-  Install packages (dependencies)  
-  ```sh
-  pnpm install
-  ```
+2. Switch to the `node-demo` directory:
 
-  starts the demo project
-  ```sh
-  pnpm dev
-  ```
+    ```sh
+    cd examples/node-demo
+    ```
 
-  use `curl` or another tool to call the `invite-user`  API:
-  ```sh
-  curl -d '{ "email": "test@user.ch", "firstName": "Agent", "lastName": "EventFabric", "group": "admin" }' -X POST http://localhost:3000/iam/users/invite-user
-  ```
+3. Copy the `.env.example` template for local development (use environment variables in production)
 
-  outputs:
-  ```sh
-  {"_id":"6a307c03e711a873b225ed44","email":"test@user.ch","firstName":"Agent","lastName":"EventFabric","group":"admin","createdAt":"2026-06-15T20:26:11.755Z","updatedAt":"2026-06-15T20:26:11.755Z"}
-  ```
+    ```sh
+    cp .env.example .env
+    ```
+    
+4. Start the [ferretdb](https://github.com/FerretDB/FerretDB) container as an Open Source licensed [MongoDB](https://www.mongodb.com/) alternative based on [postgresql](https://www.postgresql.org/)
 
-  use `/iam/users/groups` to receive all groups with the users:
-  ```sh
-  curl http://localhost:3000/iam/users/groups
-  ```
+    ```sh
+    docker compose up -d
+    ```
 
-  outputs:
-  ```sh
-  [{"_id":"6a307c03e711a873b225ed44","email":"test@user.ch","group":"admin","firstName":"Agent","lastName":"EventFabric","createdAt":"2026-06-15T20:26:11.755Z","updatedAt":"2026-06-15T20:26:11.755Z"}]}]
-  ```
+5. Install packages (dependencies)
 
+    ```sh
+    pnpm install
+    ```
+
+6. Starts the demo project
+
+    ```sh
+    pnpm dev
+    ```
+
+7. Use `curl` or another tool to call the `invite-user` API:
+
+    ```sh
+    curl -d '{ "email": "test@user.ch", "firstName": "Agent", "lastName": "EventFabric", "group": "admin" }' -X POST http://localhost:3000/iam/users/invite-user
+    ```
+
+    outputs:
+    ```sh
+    {"_id":"6a307c03e711a873b225ed44","email":"test@user.ch","firstName":"Agent","lastName":"EventFabric","group":"admin","createdAt":"2026-06-15T20:26:11.755Z","updatedAt":"2026-06-15T20:26:11.755Z"}
+    ```
+
+
+8. Use `/iam/users/groups` to receive all groups with the users:
+
+    ```sh
+    curl http://localhost:3000/iam/users/groups
+    ```
+
+    outputs:
+    ```sh
+    [{"_id":"6a307c03e711a873b225ed44","email":"test@user.ch","group":"admin","firstName":"Agent","lastName":"EventFabric","createdAt":"2026-06-15T20:26:11.755Z","updatedAt":"2026-06-15T20:26:11.755Z"}]}]
+    ```
+
+9. Clean up and remove volumes
+
+    ```sh
+    docker compose down -v
+    ```
+
+</Steps>
   </TabItem>
 </Tabs>
