@@ -1,0 +1,55 @@
+---
+title: Documentation
+description: Get started building your event-driven applications with EventFabric.
+template: splash
+hero:
+  title: EventFabric<br /><strong>Erstelle Event-Driven Anwendungen</strong>
+  tagline: Baue Event-Driven Anwendungen vereinfacht mit Typescript.
+  image:
+    file: ../../../assets/EventFabric.webp
+    alt: EventFabric hero Bild
+  actions:
+    - text: Starten
+      link: /de/guides/get-started
+      icon: right-arrow
+    - text: Was ist EventFabric?
+      link: /de/guides/what-is-eventfabric
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid >
+	<Card title="Grundlegende Prinzipien">
+    ![Icon for Simple Core Concepts](../../../assets/simplecore.png)
+
+    Keine komplizierten und komplexen Prinzipien der objektorientierten oder funktionalen Programmierung. Kein "Magie" durch Frameworks. Nur expliziter Code.
+
+    Entwickeln Sie eine Anwendung mit Befehlen, Ereignissen und Abfragen.
+	</Card>
+
+	<Card title="Befehle & Abfragen">
+    ![Icon for CQRS](../../../assets/cqrs.png)
+
+    Die reale Welt arbeitet nicht in einzelnen Momentaufnahmen – stattdessen handelt sie auf Basis von Aktionen, Ereignissen und Ergebnissen.
+
+    EventFabric passt perfekt zum CQRS-Muster. Lesen Sie mehr unter: [cqrs.com](https://www.cqrs.com/).
+	</Card>
+
+	<Card title="Event Sourcing">
+    ![Icon for EventSourcingDB](../../../assets/eventsourcingdb.png)
+
+    Wenn Sie Ihre Anwendung so gestalten, dass sie reale Aktionen und Ereignisse widerspiegelt, ist es entscheidend, diese Ereignisse korrekt zu speichern.
+
+    EventFabric lässt sich nahtlos in [EventSourcingDB](https://www.eventsourcingdb.io/) integrieren.
+	</Card>
+
+	<Card title="Integrierte Überwachbarkeit">
+    ![Icon for OpenTelemetry](../../../assets/opentelemetry.png)
+
+    Protokollierung, Tracing und Metriken. Alles dabei.
+
+    EventFabric verwendet [OpenTelemetry](https://opentelemetry.io/) für alle relevanten Operationen, um eine solide Grundlage für die Überwachung direkt zu bieten.
+	</Card>
+</CardGrid>
