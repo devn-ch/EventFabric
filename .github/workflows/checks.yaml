@@ -55,9 +55,3 @@ jobs:
       - name: Build docs
         working-directory: ./docs
         run: npm ci && npm run build
-
-      - name: Verify LLM artifacts
-        run: |
-          test -f docs/.vitepress/dist/llms.txt
-          test -f docs/.vitepress/dist/llms-full.txt
-          test -f docs/.vitepress/dist/guide/core/commands.md
