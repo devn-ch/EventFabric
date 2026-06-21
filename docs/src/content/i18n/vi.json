@@ -1,0 +1,14 @@
+{
+    "feature.simple_core_concepts.title": "Các khái niệm cốt lõi cơ bản",
+    "feature.simple_core_concepts": "Không sử dụng các nguyên tắc thiết kế OOP hoặc FP phức tạp và khó hiểu. Không cần 'ma thuật' của framework. Chỉ là mã rõ ràng.",
+    "feature.simple_core_concepts.additional": "Xây dựng một ứng dụng với các lệnh, sự kiện và truy vấn.",
+    "feature.command_and_queries.title": "Lệnh và Truy vấn",
+    "feature.command_and_queries": "Thế giới thực không hoạt động dựa trên trạng thái tĩnh – thay vào đó, nó hoạt động dựa trên hành động, sự kiện và kết quả.",
+    "feature.command_and_queries.additional": "EventFabric rất phù hợp với mẫu CQRS (Command Query Responsibility Segregation). Tìm hiểu thêm tại: ",
+    "feature.event_sourcing.title": "Event Sourcing",
+    "feature.event_sourcing": "Event Sourcing là một mẫu mạnh mẽ cho phép bạn ghi lại tất cả các thay đổi trạng thái của ứng dụng dưới dạng một chuỗi các sự kiện.",
+    "feature.event_sourcing.additional": "EventFabric cung cấp hỗ trợ tích hợp cho EventSourcingDB: ",
+    "feature.observability.title": "Khả năng quan sát được tích hợp sẵn",
+    "feature.observability": "Khả năng quan sát là rất quan trọng để hiểu hành vi của ứng dụng và chẩn đoán các vấn đề.",
+    "feature.observability.additional": "EventFabric cung cấp hỗ trợ tích hợp cho OpenTelemetry, cho phép bạn dễ dàng thiết lập và thu thập thông tin về hiệu suất và hành vi của ứng dụng. Tìm hiểu thêm về OpenTelemetry: "
+}
