@@ -1,4 +1,5 @@
 {
+    "description": "EventFabric ist ein leichtgewichtiges, flexibles und leistungsstarkes Framework für die Entwicklung von Anwendungen mit dem CQRS-Muster und Event Sourcing. Es bietet eine einfache API, integrierte Unterstützung für EventSourcingDB und OpenTelemetry sowie eine Vielzahl von Funktionen, die Ihnen helfen, robuste und skalierbare Anwendungen zu erstellen.",
     "feature.simple_core_concepts.title": "Einfache Kernkonzepte",
     "feature.simple_core_concepts": "Keine umständlichen und komplexen OOP- oder FP-Designprinzipien. Keine Framework-Magie. Nur expliziter Code.",
     "feature.simple_core_concepts.additional": "Erstellen Sie eine Anwendung mit Befehlen, Ereignissen und Abfragen.",

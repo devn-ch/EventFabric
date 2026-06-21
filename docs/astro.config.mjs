@@ -4,14 +4,14 @@ import { defineConfig } from 'astro/config';
 import mermaid from 'astro-mermaid';
 import remarkGfm from 'remark-gfm';
 import { starlightBasePath } from "starlight-base-path";
+import starlightCelestiaTheme from "starlight-theme-celestia";
 
-// https://astro.build/config
 export default defineConfig({
 	base: "/EventFabric",
 	integrations: [
 		mermaid({
-		theme: 'forest',
-		autoTheme: true
+			theme: 'forest',
+			autoTheme: true
 		}),
 		starlight({
 			title: 'EventFabric CQRS Framework',
@@ -50,7 +50,7 @@ export default defineConfig({
 					items: [{ autogenerate: { directory: 'utils' } }],
 				},
 			],
-			plugins: [starlightBasePath()],
+			plugins: [starlightBasePath(), starlightCelestiaTheme()],
 			defaultLocale: 'root',
 			locales: {
 				root: {

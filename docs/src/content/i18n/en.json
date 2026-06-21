@@ -1,4 +1,5 @@
 {
+    "description": "EventFabric is a lightweight, flexible, and powerful framework for building applications using the CQRS pattern and Event Sourcing. It provides a simple API, built-in support for EventSourcingDB and OpenTelemetry, and a variety of features to help you build robust and scalable applications.",
     "feature.simple_core_concepts.title": "Simple Core Concepts",
     "feature.simple_core_concepts": "No clunky and complex OOP or FP design principles. No Framework Magic. Just explicit code.",
     "feature.simple_core_concepts.additional": "Compose an application with commands, events, and queries.",
