@@ -7,6 +7,10 @@ export const collections = {
 	docs: defineCollection({ loader: docsLoader(), schema: docsSchema() }),
 	i18n: defineCollection({
     	loader: i18nLoader(),
-    	schema: i18nSchema({}),
+    	schema: i18nSchema({
+			extend: z.object({
+		        description: z.string(),
+		    }),
+		}),
   	}),
 };
