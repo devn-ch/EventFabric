@@ -1,0 +1,14 @@
+{
+    "feature.simple_core_concepts.title": "Simple Core Concepts",
+    "feature.simple_core_concepts": "No clunky and complex OOP or FP design principles. No Framework Magic. Just explicit code.",
+    "feature.simple_core_concepts.additional": "Compose an application with commands, events, and queries.",
+    "feature.command_and_queries.title": "Commands and Queries",
+    "feature.command_and_queries": "The real world doesn't operate in snapshots – instead it operates in actions, events and outcomes.",
+    "feature.command_and_queries.additional": "EventFabric is a perfect fit for the CQRS pattern. Read more on: ",
+    "feature.event_sourcing.title": "Event Sourcing",
+    "feature.event_sourcing": "Event sourcing is a powerful pattern that allows you to capture all changes to an application state as a sequence of events.",
+    "feature.event_sourcing.additional": "EventFabric provides built-in support for EventSourcingDB: ",
+    "feature.observability.title": "Observability Built-in",
+    "feature.observability": "Observability is crucial for understanding the behavior of your application and diagnosing issues.",
+    "feature.observability.additional": "EventFabric provides built-in support for OpenTelemetry, allowing you to easily instrument your application and gain insights into its performance and behavior. Learn more about OpenTelemetry: "
+}

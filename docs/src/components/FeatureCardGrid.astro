@@ -1,0 +1,27 @@
+---
+import { CardGrid } from '@astrojs/starlight/components';
+import FeatureCard from './FeatureCard.astro';
+import { Image } from 'astro:assets';
+
+import simplecoreImage from '@assets/simplecore.png';
+import cqrsImage from '@assets/cqrs.png';
+import eventsourcingdbImage from '@assets/eventsourcingdb.png';
+import opentelemetryImage from '@assets/opentelemetry.png';
+---
+<CardGrid >
+  <FeatureCard title="feature.simple_core_concepts.title" description="feature.simple_core_concepts" additional="feature.simple_core_concepts.additional">
+    <Image src={simplecoreImage} alt="Simple Core Concepts icon" />
+  </FeatureCard>
+
+  <FeatureCard title="feature.command_and_queries.title" description="feature.command_and_queries" additional="feature.command_and_queries.additional" link="https://cqrs.com/">
+    <Image src={cqrsImage} alt="CQRS icon" />
+  </FeatureCard>
+
+  <FeatureCard title="feature.event_sourcing.title" description="feature.event_sourcing" additional="feature.event_sourcing.additional" link="https://eventsourcingdb.io/">
+    <Image src={eventsourcingdbImage} alt="EventSourcingDB icon" />
+  </FeatureCard>
+
+  <FeatureCard title="feature.observability.title" description="feature.observability" additional="feature.observability.additional" link="https://opentelemetry.io/">
+    <Image src={opentelemetryImage} alt="OpenTelemetry icon" />
+  </FeatureCard>
+</CardGrid>

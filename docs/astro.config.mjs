@@ -51,6 +51,17 @@ export default defineConfig({
 				},
 			],
 			plugins: [starlightBasePath()],
+			defaultLocale: 'root',
+			locales: {
+				root: {
+					label: 'English',
+					lang: 'en',
+				},
+				de: {
+					label: 'Deutsch',
+					lang: 'de',
+				},
+			}
 		}),
 	],
 	markdown: {
