@@ -61,6 +61,10 @@ export default defineConfig({
 					label: 'Deutsch',
 					lang: 'de',
 				},
+				vi: {
+					label: 'Tiếng Việt',
+					lang: 'vi',
+				},
 			}
 		}),
 	],
