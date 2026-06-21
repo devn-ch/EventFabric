@@ -1,0 +1,14 @@
+{
+    "feature.simple_core_concepts.title": "Einfache Kernkonzepte",
+    "feature.simple_core_concepts": "Keine umständlichen und komplexen OOP- oder FP-Designprinzipien. Keine Framework-Magie. Nur expliziter Code.",
+    "feature.simple_core_concepts.additional": "Erstellen Sie eine Anwendung mit Befehlen, Ereignissen und Abfragen.",
+    "feature.command_and_queries.title": "Befehle und Abfragen",
+    "feature.command_and_queries": "Die reale Welt arbeitet nicht mit Momentaufnahmen – sie arbeitet mit Aktionen, Ereignissen und Ergebnissen.",
+    "feature.command_and_queries.additional": "EventFabric ist perfekt für das CQRS-Muster geeignet. Lesen Sie mehr auf: ",
+    "feature.event_sourcing.title": "Event Sourcing",
+    "feature.event_sourcing": "Event Sourcing ist ein leistungsstarkes Muster, mit dem Sie alle Änderungen am Anwendungsstatus als Sequenz von Ereignissen erfassen können.",
+    "feature.event_sourcing.additional": "EventFabric bietet integrierte Unterstützung für EventSourcingDB: ",
+    "feature.observability.title": "Eingebaute Beobachtbarkeit",
+    "feature.observability": "Beobachtbarkeit ist entscheidend, um das Verhalten Ihrer Anwendung zu verstehen und Probleme zu diagnostizieren.",
+    "feature.observability.additional": "EventFabric bietet integrierte Unterstützung für OpenTelemetry, mit der Sie Ihre Anwendung einfach instrumentieren und Einblicke in ihre Leistung und ihr Verhalten gewinnen können. Erfahren Sie mehr über OpenTelemetry: "
+}

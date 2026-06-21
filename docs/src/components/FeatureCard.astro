@@ -1,0 +1,11 @@
+---
+import { Card } from '@astrojs/starlight/components';
+
+const { title, description, additional, link} = Astro.props;
+const domain = link && new URL(link || '').hostname;
+---
+<Card title={Astro.locals.t(title)}>
+    <slot />
+    <p>{Astro.locals.t(description)}</p>
+    <p>{Astro.locals.t(additional)}{link && <a href={link} target="_blank">{domain}</a>}</p>
+</Card>

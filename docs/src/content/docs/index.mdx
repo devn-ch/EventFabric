@@ -17,39 +17,6 @@ hero:
       icon: external
       variant: minimal
 ---
+import FeatureCardGrid from '@components/FeatureCardGrid.astro';
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
-
-<CardGrid >
-	<Card title="Simple Core Concepts">
-    ![Icon for Simple Core Concepts](../../assets/simplecore.png)
-
-    No clunky and complex OOP or FP design principles. No Framework Magic. Just explicit code.
-
-    Compose an application with commands, events, and queries.
-	</Card>
-
-	<Card title="Commands & Queries">
-    ![Icon for CQRS](../../assets/cqrs.png)
-
-    The real world doesn't operate in snapshots – instead it operates in actions, events and outcomes.
-
-    EventFabric is a perfect fit for the CQRS pattern. Read more on [cqrs.com](https://www.cqrs.com/).
-	</Card>
-
-	<Card title="Event Sourcing">
-    ![Icon for EventSourcingDB](../../assets/eventsourcingdb.png)
-
-    When building your application to reflect real world actions and events it is crucial to store those events properly.
-
-    EventFabric integrates seamlessly with [EventSourcingDB](https://www.eventsourcingdb.io/).
-	</Card>
-
-	<Card title="Observability Built-In">
-    ![Icon for OpenTelemetry](../../assets/opentelemetry.png)
-
-    Logging, tracing, and metrics. Batteries included.
-
-    EventFabric uses [OpenTelemetry](https://opentelemetry.io/) for all relevant operations to provide a solid foundation for observability out of the box.
-	</Card>
-</CardGrid>
+<FeatureCardGrid />
